@@ -199,6 +199,7 @@ exports.makeProduct = (req, res, next) => {
 	}
 };
 
+//Update Product
 exports.updateProduct = (req, res) => {
 	const ProductId = req.params.id;
 
@@ -206,7 +207,65 @@ exports.updateProduct = (req, res) => {
 		req.body;
 
 	db.query(
-		"SELECT ownerId FROM product WHERE productId = ?",
+		"UPDATE product SET productName = ?, category = ?, price = ?, description = ?, additionalRemarks = ? WHERE productId = ?",
+		[
+			productName,
+			category,
+			Number(price),
+			description,
+			additionalRemarks,
+			ProductId,
+		],
+		(err, result) => {
+			if (err) {
+				console.log("******ERROR******");
+				console.log(err);
+				console.log("*****************");
+
+				return res.json({
+					status: "error",
+					data: null,
+					message: err.message,
+					statusCode: res.statusCode,
+				});
+			} else {
+				db.query(
+					"SELECT * FROM product WHERE productId = ?",
+					[ProductId],
+					(err, results) => {
+						if (err) {
+							console.log("******ERROR******");
+							console.log(err);
+							console.log("*****************");
+
+							return res.json({
+								status: "error",
+								data: null,
+								message: err.message,
+								statusCode: res.statusCode,
+							});
+						} else {
+							return res.json({
+								status: "success",
+								data: results,
+								message: "Product updated successfully",
+								statusCode: res.statusCode,
+								ProductId,
+							});
+						}
+					}
+				);
+			}
+		}
+	);
+};
+
+//Delete Product
+exports.deleteProduct = (req, res) => {
+	const ProductId = req.params.id;
+
+	db.query(
+		"DELETE FROM product WHERE productId = ?",
 		[ProductId],
 		(err, result) => {
 			if (err) {
@@ -221,69 +280,13 @@ exports.updateProduct = (req, res) => {
 					statusCode: res.statusCode,
 				});
 			} else {
-				const { ownerId } = result[0];
-				if (Number(ownerId) !== Number(decrypt(req.session.UserId))) {
-					const statusCode = 403;
-					return res.status(statusCode).json({
-						status: "error",
-						data: null,
-						message: "Forbidden. Unauthorized access",
-						statusCode,
-					});
-				} else {
-					db.query(
-						"UPDATE product SET productName = ?, category = ?, price = ?, description = ?, additionalRemarks = ? WHERE productId = ?",
-						[
-							productName,
-							category,
-							Number(price),
-							description,
-							additionalRemarks,
-							ProductId,
-						],
-						(err, result) => {
-							if (err) {
-								console.log("******ERROR******");
-								console.log(err);
-								console.log("*****************");
-
-								return res.json({
-									status: "error",
-									data: null,
-									message: err.message,
-									statusCode: res.statusCode,
-								});
-							} else {
-								db.query(
-									"SELECT * FROM product WHERE productId = ?",
-									[ProductId],
-									(err, results) => {
-										if (err) {
-											console.log("******ERROR******");
-											console.log(err);
-											console.log("*****************");
-
-											return res.json({
-												status: "error",
-												data: null,
-												message: err.message,
-												statusCode: res.statusCode,
-											});
-										} else {
-											return res.json({
-												status: "success",
-												data: result,
-												message: "Product updated successfully",
-												statusCode: res.statusCode,
-												ProductId,
-											});
-										}
-									}
-								);
-							}
-						}
-					);
-				}
+				return res.json({
+					status: "success",
+					data: null,
+					message: "Product deleted successfully",
+					statusCode: res.statusCode,
+					ProductId,
+				});
 			}
 		}
 	);

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const shopController = require("../controller/Shop");
-const { categoryBypassCheck } = require("../middlewares/Shop");
+const { categoryBypassCheck, validateOwner } = require("../middlewares/Shop");
 const { validateUser } = require("../middlewares/Auth");
 
 // GET /shop
@@ -22,11 +22,17 @@ router.post(
 router.put(
 	"/:id/update",
 	validateUser,
+	validateOwner,
 	categoryBypassCheck,
 	shopController.updateProduct
 );
 
-// //DELETE /shop/:id/delete
-// router.delete("/:id/delete",validateUser, shopController.deleteProduct);
+//DELETE /shop/:id/delete
+router.delete(
+	"/:id/delete",
+	validateUser,
+	validateOwner,
+	shopController.deleteProduct
+);
 
 module.exports = router;
