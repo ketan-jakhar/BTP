@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 require("dotenv").config({ path: "../.env" });
 
-const { encrypt, decrypt } = require("../helpers/Crypto");
+const { encrypt, decrypt, encryptId } = require("../helpers/Crypto");
 
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,
@@ -89,8 +89,9 @@ exports.getProduct = (req, res) => {
 exports.makeProduct = (req, res, next) => {
 	try {
 		console.log("--------------------------------");
-		console.log("req.session in after /create req: ", req.session);
+		console.log("req.session in after /create request: ", req.session);
 		console.log("--------------------------------");
+
 		const { productName, category, price, description, additionalRemarks } =
 			req.body;
 		// price = Number(price);

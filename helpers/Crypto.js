@@ -12,6 +12,7 @@ exports.encrypt = (data) => {
 	let encrypted = cipher.update(data);
 
 	encrypted = Buffer.concat([encrypted, cipher.final()]);
+
 	global.iv = iv.toString("hex");
 	return encrypted.toString("hex");
 };

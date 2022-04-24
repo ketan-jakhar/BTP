@@ -1,0 +1,56 @@
+
+CREATE TABLE user (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(75) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `lnm_btp`.`product` (
+  `productId` INT NULL AUTO_INCREMENT,
+  `name` VARCHAR(75) NOT NULL,
+  `category` ENUM("elect") NOT NULL,
+  `price` INT(5) NOT NULL,
+  `owner` VARCHAR(45) NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `available` TINYINT NOT NULL DEFAULT 1,
+  `buyer` VARCHAR(45) NULL,
+  `sell_time` DATETIME NULL,
+  PRIMARY KEY (`productId`));
+
+---------
+
+CREATE TABLE `lnm_btp`.`carpool` (
+  `carPoolId` INT NOT NULL AUTO_INCREMENT,
+  `userName` VARCHAR(45) NOT NULL,
+  `phoneNumber` BIGINT UNSIGNED NOT NULL,
+  `userId` INT NULL,
+  `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `ridersCount` INT UNSIGNED NOT NULL DEFAULT 1,
+  `pickupLocation` VARCHAR(45) NOT NULL,
+  `dropLocation` VARCHAR(45) NOT NULL,
+  `additionalRemarks` LONGTEXT NULL DEFAULT NULL,
+  `carpoolcol` VARCHAR(45) NULL,
+  PRIMARY KEY (`carPoolId`),
+  UNIQUE INDEX `carPoolId_UNIQUE` (`carPoolId` ASC) VISIBLE);
+
+  -------------
+
+  ALTER TABLE `lnm_btp`.`carpool` 
+ADD INDEX `FK_userId_idx` (`userId` ASC) VISIBLE,
+ADD INDEX `FK_user_idx` (`phoneNumber` ASC) VISIBLE;
+;
+ALTER TABLE `lnm_btp`.`carpool` 
+ADD CONSTRAINT `FK_userId`
+  FOREIGN KEY (`userId`)
+  REFERENCES `lnm_btp`.`user` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `FK_contactNumber`
+  FOREIGN KEY (`phoneNumber`)
+  REFERENCES `lnm_btp`.`user` (`phoneNumber`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+------

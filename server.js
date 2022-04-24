@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const PORT = process.env.PORT || 4000;
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 // const path = require("path");
 
@@ -21,6 +22,9 @@ dotenv.config({ path: "./.env" });
 require("./config/db.config.js");
 
 const app = express();
+
+// CORS middleware
+app.use(cors());
 
 // Parsing middleware
 
