@@ -233,7 +233,7 @@ exports.login = (req, res) => {
 	);
 };
 
-// LOGOUT ------------------------
+// GET /LOGOUT
 exports.logout = (req, res) => {
 	try {
 		console.log("------------");

@@ -9,12 +9,13 @@ const cors = require("cors");
 
 // const path = require("path");
 
-// routes
+// defining routes
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 const carPoolRoutes = require("./routes/carPool");
 const recycleRoutes = require("./routes/recycle");
 const shopRoutes = require("./routes/shop");
+const userRoutes = require("./routes/user");
 
 //dotenv config
 dotenv.config({ path: "./.env" });
@@ -56,6 +57,8 @@ app.use(express.json());
 // Parse text/html
 app.use(express.text());
 
+//All routes
+
 // Admin Routes
 app.use("/admin", adminRoutes);
 
@@ -66,10 +69,13 @@ app.use("/", authRoutes);
 app.use("/carpool", carPoolRoutes);
 
 // Recycle Routes
-app.use("/recycle", authRoutes);
+app.use("/recycle", recycleRoutes);
 
 // Shop Routes
 app.use("/shop", shopRoutes);
+
+// User Routes
+app.use("/profile", userRoutes);
 
 app.listen(PORT, () => {
 	console.log(`Server running on PORT ${PORT}`);

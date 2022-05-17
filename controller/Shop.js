@@ -11,6 +11,7 @@ const db = mysql.createConnection({
 	multipleStatements: true,
 });
 
+// Get all products
 exports.getShop = (req, res) => {
 	try {
 		db.query(`SELECT * FROM product`, (err, result) => {
@@ -46,6 +47,7 @@ exports.getShop = (req, res) => {
 	}
 };
 
+// Get one product
 exports.getProduct = (req, res) => {
 	try {
 		const { id } = req.params;
@@ -86,6 +88,7 @@ exports.getProduct = (req, res) => {
 	}
 };
 
+// Create a new product
 exports.makeProduct = (req, res, next) => {
 	try {
 		console.log("--------------------------------");
@@ -200,7 +203,7 @@ exports.makeProduct = (req, res, next) => {
 	}
 };
 
-//Update Product
+//Update a Product
 exports.updateProduct = (req, res) => {
 	const ProductId = req.params.id;
 
@@ -261,7 +264,7 @@ exports.updateProduct = (req, res) => {
 	);
 };
 
-//Delete Product
+//Delete a Product
 exports.deleteProduct = (req, res) => {
 	const ProductId = req.params.id;
 
