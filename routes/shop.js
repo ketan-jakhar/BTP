@@ -5,7 +5,7 @@ const { categoryBypassCheck, validateOwner } = require("../middlewares/Shop");
 const { validateUser } = require("../middlewares/Auth");
 
 // GET /shop
-router.get("/all", validateUser, shopController.getShop);
+router.get("/", validateUser, shopController.getShop);
 
 // GET /shop/:id
 router.get("/:id", validateUser, shopController.getProduct);

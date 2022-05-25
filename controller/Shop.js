@@ -89,7 +89,7 @@ exports.getProduct = (req, res) => {
 };
 
 // Create a new product
-exports.makeProduct = (req, res, next) => {
+exports.makeProduct = (req, res) => {
 	try {
 		console.log("--------------------------------");
 		console.log("req.session in after /create request: ", req.session);

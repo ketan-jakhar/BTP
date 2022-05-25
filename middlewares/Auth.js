@@ -72,7 +72,7 @@ exports.validateAdmin = (req, res, next) => {
 		return res.status(statusCode).json({
 			status: "error",
 			data: null,
-			message: "User Authentication failed. Please login to continue.",
+			message: "Admin Authentication failed. Please login to continue.",
 			statusCode,
 		});
 	}

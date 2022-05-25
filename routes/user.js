@@ -2,14 +2,20 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controller/User");
 const { validateUser } = require("../middlewares/Auth");
+const { validateOwner } = require("../middlewares/User");
 
-// GET /user/:id
-router.get("/:id", validateUser, userController.getProfile);
+// GET /profile/:id
+router.get("/:id", validateUser, validateOwner, userController.getProfile);
 
-// PUT /profile/:id/update
-router.put("/:id/update", validateUser, userController.updateProfile);
+// // PUT /profile/:id/update
+// router.put("/:id/update", validateUser, userController.updateProfile);
 
-//DELETE /user/:id/delete
-router.delete("/:id/delete", validateUser, userController.deleteProfile);
+//DELETE /profile/:id/delete
+router.delete(
+	"/:id/delete",
+	validateUser,
+	validateOwner,
+	userController.deleteProfile
+);
 
 module.exports = router;

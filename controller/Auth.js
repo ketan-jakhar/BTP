@@ -99,7 +99,6 @@ exports.register = (req, res) => {
 					});
 				}
 			} else {
-				``;
 				const statusCode = 500;
 				console.log(err);
 				return res.status(statusCode).json({
