@@ -10,12 +10,12 @@ router.get("/:id", validateUser, validateOwner, userController.getProfile);
 // // PUT /profile/:id/update
 // router.put("/:id/update", validateUser, userController.updateProfile);
 
-//DELETE /profile/:id/delete
-router.delete(
-	"/:id/delete",
-	validateUser,
-	validateOwner,
-	userController.deleteProfile
-);
+// //DELETE /profile/:id/delete
+// router.delete(
+// 	"/:id/delete",
+// 	validateUser,
+// 	validateOwner,
+// 	userController.deleteProfile
+// );
 
 module.exports = router;

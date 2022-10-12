@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 require("dotenv").config({ path: "../.env" });
 
-const { encrypt, decrypt, encryptId } = require("../helpers/Crypto");
+const { encrypt, decrypt, encryptId } = require("../server/helpers/Crypto");
 
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,

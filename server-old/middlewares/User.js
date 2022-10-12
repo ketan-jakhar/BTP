@@ -3,7 +3,7 @@ require("dotenv").config({ path: "../.env" });
 
 // const { validateOwner } = require("../helpers/Validate");
 
-const { encrypt, decrypt, encryptId } = require("../helpers/Crypto");
+const { encrypt, decrypt, encryptId } = require("../server/helpers/Crypto");
 
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,

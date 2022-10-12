@@ -10,12 +10,12 @@ const cors = require("cors");
 // const path = require("path");
 
 // defining routes
-const adminRoutes = require("./routes/admin");
-const authRoutes = require("./routes/auth");
-const carPoolRoutes = require("./routes/carPool");
-const recycleRoutes = require("./routes/recycle");
-const shopRoutes = require("./routes/shop");
-const userRoutes = require("./routes/user");
+const adminRoutes = require("../routes/admin");
+const authRoutes = require("../routes/auth");
+const carPoolRoutes = require("../routes/carPool");
+const recycleRoutes = require("../routes/recycle");
+const shopRoutes = require("../routes/shop");
+const userRoutes = require("../routes/user");
 
 //dotenv config
 dotenv.config({ path: "./.env" });

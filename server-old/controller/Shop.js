@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 require("dotenv").config({ path: "../.env" });
 
-const { encrypt, decrypt, encryptId } = require("../helpers/Crypto");
+const { encrypt, decrypt, encryptId } = require("../server/helpers/Crypto");
 
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,
@@ -11,10 +11,10 @@ const db = mysql.createConnection({
 	multipleStatements: true,
 });
 
-// Get all Pools
-exports.getCarPool = (req, res) => {
+// Get all products
+exports.getShop = (req, res) => {
 	try {
-		db.query(`SELECT * FROM carpool`, (err, result) => {
+		db.query(`SELECT * FROM product`, (err, result) => {
 			if (err) {
 				console.log("******ERROR******");
 				console.log(err);
@@ -47,12 +47,12 @@ exports.getCarPool = (req, res) => {
 	}
 };
 
-// Get one pool
-exports.getCabInfo = (req, res) => {
+// Get one product
+exports.getProduct = (req, res) => {
 	try {
 		const { id } = req.params;
 		db.query(
-			`SELECT owner, ridersCount, pickupLocation, dropLocation, created_at, additionalRemarks FROM carpool WHERE carPoolId = ?`,
+			`SELECT productName, category, price, owner, created_at FROM product WHERE productId = ?`,
 			[id],
 			(err, result) => {
 				if (err) {
@@ -88,18 +88,18 @@ exports.getCabInfo = (req, res) => {
 	}
 };
 
-// Create a new car pool
-exports.createCarPool = (req, res) => {
+// Create a new product
+exports.makeProduct = (req, res) => {
 	try {
 		console.log("--------------------------------");
 		console.log("req.session in after /create request: ", req.session);
 		console.log("--------------------------------");
 
-		const { ridersCount, pickupLocation, dropLocation, additionalRemarks } =
+		const { productName, category, price, description, additionalRemarks } =
 			req.body;
 		// price = Number(price);
 		// const ProductId = decrypt(req.session.ProductId);
-		let { CarPoolId } = req.session;
+		let { ProductId } = req.session;
 		const UserId = decrypt(req.session.UserId);
 
 		db.query(
@@ -112,7 +112,7 @@ exports.createCarPool = (req, res) => {
 					console.log("*****************");
 
 					console.log("--------------------------------");
-					console.log("query result(createCarPool): ", result);
+					console.log("query result(makeProduct): ", result);
 					console.log("--------------------------------");
 					return res.json({
 						status: "error",
@@ -122,21 +122,22 @@ exports.createCarPool = (req, res) => {
 					});
 				} else {
 					console.log("--------------------------------");
-					console.log("query result(createCarPool): ", result);
+					console.log("query result(makeProduct): ", result);
 					console.log("--------------------------------");
-					console.log("session before carpool insertion: ", req.session);
+					console.log("session before product insertion: ", req.session);
 					console.log("--------------------------------");
 					if (result.length) req.session.owner = result[0].name;
 
 					db.query(
-						`INSERT INTO carpool SET ridersCount = ?, pickupLocation = ?, dropLocation = ?, owner = ?, userId = ?, phoneNumber = ?,additionalRemarks = ?`,
+						`INSERT INTO product SET productName = ?, price = ?, category = ?, owner = ?, ownerId = ?,ownerContact = ?, description = ?, additionalRemarks = ?`,
 						[
-							ridersCount,
-							pickupLocation,
-							dropLocation,
+							productName,
+							price,
+							category,
 							req.session.owner,
 							UserId,
 							result[0].phoneNumber,
+							description,
 							additionalRemarks,
 						],
 						(err, response) => {
@@ -152,15 +153,15 @@ exports.createCarPool = (req, res) => {
 									statusCode: res.statusCode,
 								});
 							} else {
-								CarPoolId = response.insertId; //store car pool id in session
+								ProductId = response.insertId; //store product id in session
 								console.log("--------------------------------");
 								console.log("response: ", response);
 								console.log("--------------------------------");
-								console.log("session after car pool insertion: ", req.session);
+								console.log("session after product insertion: ", req.session);
 								console.log("--------------------------------");
 								db.query(
-									"SELECT * FROM carpool WHERE carPoolId = ?",
-									[CarPoolId],
+									"SELECT * FROM product WHERE productId = ?",
+									[ProductId],
 									(err, resp) => {
 										if (err) {
 											console.log("******ERROR******");
@@ -176,9 +177,9 @@ exports.createCarPool = (req, res) => {
 											return res.json({
 												status: "success",
 												data: resp,
-												message: "Car Pool published successfully",
+												message: "Product published successfully",
 												statusCode: res.statusCode,
-												CarPoolId: response.insertId,
+												productId: response.insertId,
 											});
 										}
 									}
@@ -202,15 +203,23 @@ exports.createCarPool = (req, res) => {
 	}
 };
 
-//Update a Car Pool
-exports.updateCarPool = (req, res) => {
-	const CarPoolId = req.params.id;
+//Update a Product
+exports.updateProduct = (req, res) => {
+	const ProductId = req.params.id;
 
-	const { ridersCount, pickupLocation, dropLocation, additionalRemarks } =
+	const { productName, category, price, description, additionalRemarks } =
 		req.body;
+
 	db.query(
-		"UPDATE carpool SET ridersCount = ?, pickupLocation = ?, dropLocation = ?,additionalRemarks = ? WHERE carPoolId = ?",
-		[ridersCount, pickupLocation, dropLocation, additionalRemarks, CarPoolId],
+		"UPDATE product SET productName = ?, category = ?, price = ?, description = ?, additionalRemarks = ? WHERE productId = ?",
+		[
+			productName,
+			category,
+			Number(price),
+			description,
+			additionalRemarks,
+			ProductId,
+		],
 		(err, result) => {
 			if (err) {
 				console.log("******ERROR******");
@@ -225,8 +234,8 @@ exports.updateCarPool = (req, res) => {
 				});
 			} else {
 				db.query(
-					"SELECT * FROM carpool WHERE carPoolId = ?",
-					[CarPoolId],
+					"SELECT * FROM product WHERE productId = ?",
+					[ProductId],
 					(err, results) => {
 						if (err) {
 							console.log("******ERROR******");
@@ -243,9 +252,9 @@ exports.updateCarPool = (req, res) => {
 							return res.json({
 								status: "success",
 								data: results,
-								message: "CarPool updated successfully",
+								message: "Product updated successfully",
 								statusCode: res.statusCode,
-								CarPoolId,
+								ProductId,
 							});
 						}
 					}
@@ -255,13 +264,13 @@ exports.updateCarPool = (req, res) => {
 	);
 };
 
-//Delete a Car Pool
-exports.deleteCarPool = (req, res) => {
-	const CarPoolId = req.params.id;
+//Delete a Product
+exports.deleteProduct = (req, res) => {
+	const ProductId = req.params.id;
 
 	db.query(
-		"DELETE FROM carpool WHERE carPoolId = ?",
-		[CarPoolId],
+		"DELETE FROM product WHERE productId = ?",
+		[ProductId],
 		(err, result) => {
 			if (err) {
 				console.log("******ERROR******");
@@ -278,9 +287,9 @@ exports.deleteCarPool = (req, res) => {
 				return res.json({
 					status: "success",
 					data: null,
-					message: "CarPool deleted successfully",
+					message: "Product deleted successfully",
 					statusCode: res.statusCode,
-					CarPoolId,
+					ProductId,
 				});
 			}
 		}

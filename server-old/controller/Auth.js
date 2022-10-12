@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 // const db = require("../config/db.config");
 const bcrypt = require("bcryptjs");
 
-const { encrypt, decrypt, encryptId } = require("../helpers/Crypto");
+const { encrypt, decrypt, encryptId } = require("../server/helpers/Crypto");
 
 // GET /REGISTER
 exports.getRegister = (req, res) => {
