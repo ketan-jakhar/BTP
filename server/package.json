@@ -12,7 +12,7 @@
   "scripts": {
     "start": "ts-node-dev --respawn --transpile-only --exit-child src/app.ts",
     "serve": "npm run build && node build/src/app.js",
-    "build": "tsc -p .",
+    "build": "rm -rf ./build & tsc -p .",
     "lint": "eslint . --ext .ts",
     "pfix": "prettier --write .",
     "pcheck": "prettier --check ."
