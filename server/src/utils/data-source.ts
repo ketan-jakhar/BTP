@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   synchronize: false,
   logging: false,
-  entities: ['build/src/**/*.entity{.ts,.js}'],
+  entities: ['src/**/*.entity{.ts,.js}'],
   migrations: ['src/migrations/**/*{.ts,.js}'],
   subscribers: ['src/subscribers/**/*{.ts,.js}'],
 });

@@ -1,6 +1,7 @@
 require('dotenv').config();
 import config from 'config';
 import { signJwt } from '.';
+import { User } from '../types/entities';
 
 // Sign access and Refresh Tokens
 export const signTokens = async (user: User) => {
@@ -9,7 +10,6 @@ export const signTokens = async (user: User) => {
 
   const payload: object = {
     id: user.id,
-    company_id: user.company_id,
     role: user.role,
   };
   console.log('payload: (signToken.ts -> signTokens) ', payload);

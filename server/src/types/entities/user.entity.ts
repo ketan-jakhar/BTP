@@ -10,7 +10,9 @@ import {
   OneToOne,
   Index,
 } from 'typeorm';
+import bcrypt from 'bcryptjs';
 import { Product, BaseResource, Carpool, CarpoolCompanion } from '.';
+import { UserRole } from '../enums';
 
 @Entity('users')
 @Unique(['email'])
@@ -51,10 +53,30 @@ export class User extends BaseResource {
   contact_number?: number;
 
   @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
+
+  @Column({
     nullable: true,
   })
   password: string;
 
+  @Column({
+    nullable: true,
+  })
+  changePasswordToken: string;
+
   @Column({ type: 'timestamp', nullable: true })
   last_login_at?: Date;
+
+  //Validate password
+  static async comparePasswords(
+    candidatePassword: string,
+    hashedPassword: string
+  ) {
+    return await bcrypt.compare(candidatePassword, hashedPassword);
+  }
 }

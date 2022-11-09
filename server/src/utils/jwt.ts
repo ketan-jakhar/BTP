@@ -1,7 +1,7 @@
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 import config from 'config';
 
-// Sign Access or Refresh Token
+// Sign Access/Refresh Token
 export const signJwt = (
   payload: object,
   keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey',
@@ -19,7 +19,7 @@ export const signJwt = (
   });
 };
 
-// Verify Access or Refresh Token
+// Verify Access/Refresh Token
 export const verifyJwt = (
   token: string,
   keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'

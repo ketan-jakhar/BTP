@@ -4,8 +4,8 @@ import config from 'config';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-// import AuthRoutes from './routes/auth.routes';
-// import { AppDataSource } from './utils/data-source';
+import AuthRoutes from './routes/auth.routes';
+import UserRoutes from './routes/user.routes';
 import { AppError, validateEnv, AppDataSource } from './utils';
 
 AppDataSource.initialize()
@@ -39,7 +39,8 @@ AppDataSource.initialize()
     );
 
     // ROUTES
-    // app.use('/api/auth', AuthRoutes);
+    app.use('/api/auth', AuthRoutes);
+    app.use('/api/user', UserRoutes);
 
     // UNHANDLED ROUTE
     app.all('*', (req: Request, res: Response, next: NextFunction) => {

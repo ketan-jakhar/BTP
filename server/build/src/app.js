@@ -19,13 +19,12 @@ const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 // import AuthRoutes from './routes/auth.routes';
-const data_source_1 = require("./utils/data-source");
-const appError_1 = __importDefault(require("./utils/appError"));
-const validateEnv_1 = __importDefault(require("./utils/validateEnv"));
-data_source_1.AppDataSource.initialize()
+// import { AppDataSource } from './utils/data-source';
+const utils_1 = require("./utils");
+utils_1.AppDataSource.initialize()
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     // VALIDATE ENV
-    (0, validateEnv_1.default)();
+    (0, utils_1.validateEnv)();
     // INITIALIZE APP
     const app = (0, express_1.default)();
     console.log('Data Source connection established');
@@ -47,7 +46,7 @@ data_source_1.AppDataSource.initialize()
     // app.use('/api/auth', AuthRoutes);
     // UNHANDLED ROUTE
     app.all('*', (req, res, next) => {
-        next(new appError_1.default(404, `Route ${req.originalUrl} not found`));
+        next(new utils_1.AppError(404, `Route ${req.originalUrl} not found`));
     });
     // GLOBAL ERROR HANDLER
     app.use((error, req, res, next) => {

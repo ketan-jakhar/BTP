@@ -14,4 +14,5 @@ export default {
   awsAccessKeyID: 'AWS_ACCESS_KEY_ID',
   awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
   awsBucketName: 'AWS_BUCKET_NAME',
+  awsRegion: 'AWS_REGION',
 };

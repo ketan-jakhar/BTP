@@ -16,6 +16,7 @@ const validateEnv = () => {
         JWT_REFRESH_TOKEN_PUBLIC_KEY: (0, envalid_1.str)(),
         AWS_ACCESS_KEY_ID: (0, envalid_1.str)(),
         AWS_SECRET_ACCESS_KEY: (0, envalid_1.str)(),
+        AWS_REGION: (0, envalid_1.str)(),
     });
 };
 exports.default = validateEnv;

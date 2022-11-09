@@ -15,6 +15,7 @@ const validateEnv = () => {
     JWT_REFRESH_TOKEN_PUBLIC_KEY: str(),
     AWS_ACCESS_KEY_ID: str(),
     AWS_SECRET_ACCESS_KEY: str(),
+    AWS_REGION: str(),
   });
 };
 

@@ -5,3 +5,4 @@ export * from './validate';
 export * from './jwt';
 export * from './changePasswordToken';
 export * from './signToken';
+export * from './cookieOptions';
