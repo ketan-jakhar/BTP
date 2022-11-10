@@ -20,7 +20,7 @@ export const createUserSchema = object({
     passwordConfirm: string({
       required_error: 'Please confirm your password',
     }),
-    contact_number: number({
+    contactNumber: number({
       required_error: 'Contact number is required',
       invalid_type_error: 'Please enter a valid contact number',
     })
@@ -42,7 +42,7 @@ export const loginUserSchema = object({
       invalid_type_error: 'Please enter a valid name',
     })
       .email('Invalid email address')
-      .endsWith('lnmiit.ac.in', 'Please use your lnmiit email address'),
+      .endsWith('@lnmiit.ac.in', 'Please use your lnmiit email address'),
     password: string({
       required_error: 'Password is required',
       invalid_type_error: 'Please enter a valid email address',

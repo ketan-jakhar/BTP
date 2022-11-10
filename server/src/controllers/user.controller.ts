@@ -7,6 +7,7 @@ import { User } from '../types/entities';
 import { SearchType } from '../types/enums';
 import { AppError } from '../utils';
 
+// Get user by id
 export const getProfile = async (
   req: Request,
   res: Response,
@@ -30,8 +31,15 @@ export const getProfile = async (
   }
 };
 
+// Update user profile
 export const updateProfile = async (
-  req: Request,
+  req: Request<
+    {},
+    {},
+    { payload: QueryDeepPartialEntity<User> },
+    {}
+    // { user: any }
+  >,
   res: Response,
   next: NextFunction
 ) => {
@@ -41,16 +49,16 @@ export const updateProfile = async (
     if (!id) return next(new AppError(400, 'User not found'));
 
     const userService = new UserService();
-    const resource = await userService.updateResource(id, payload);
-    if (!resource) return next(new AppError(400, 'User not founddd'));
+    const updatedUser = await userService.updateResource(id, payload);
+    if (!updatedUser) return next(new AppError(400, 'User not founddd'));
 
     const user = await findUserById({ id });
 
-    console.log('UPDATED USER - \n', resource);
+    console.log('UPDATED USER - \n', updatedUser);
 
     res.status(200).json({
       status: 'success',
-      data: { resource, user },
+      data: { updatedUser, user },
       message: 'User updated successfully',
     });
   } catch (err: any) {
@@ -61,8 +69,9 @@ export const updateProfile = async (
   }
 };
 
+// Get all users
 export const getAllUsers = async (
-  req: Request,
+  req: Request<{}, {}, { params: any }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -77,7 +86,7 @@ export const getAllUsers = async (
     res.status(200).json({
       status: 'success',
       data: { users },
-      message: 'Users retrieved successfully',
+      message: 'All Users data retrieved successfully',
     });
   } catch (err: any) {
     console.log('Error: (user.controller -> getAllUsers)', err);

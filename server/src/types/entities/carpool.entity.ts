@@ -43,14 +43,15 @@ export class Carpool extends BaseResource {
   rider_count!: number;
 
   @Column({ type: 'text', nullable: false })
-  drop_location!: string;
+  destination!: string;
 
   @Column({ type: 'text', nullable: false })
-  pickup_location!: string;
+  source!: string;
 
   @Column({
     type: 'boolean',
     nullable: true,
+    default: false,
   })
   is_completed: boolean;
 }

@@ -8,15 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyTokenUrl = exports.requireUser = exports.deserializeUser = void 0;
 const services_1 = require("../services");
 const utils_1 = require("../utils");
-const appError_1 = __importDefault(require("../utils/appError"));
-const jwt_1 = require("../utils/jwt");
 const deserializeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let access_token;
@@ -28,18 +23,18 @@ const deserializeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             access_token = req.cookies.access_token;
         }
         if (!access_token) {
-            return next(new appError_1.default(401, 'You are not logged in'));
+            return next(new utils_1.AppError(401, 'You are not logged in'));
         }
         // Validate the access token
-        const decoded = (0, jwt_1.verifyJwt)(access_token, 'accessTokenPublicKey');
+        const decoded = (0, utils_1.verifyJwt)(access_token, 'accessTokenPublicKey');
         if (!decoded) {
-            return next(new appError_1.default(401, `Invalid token or user doesn't exist`));
+            return next(new utils_1.AppError(401, `Invalid token or user doesn't exist`));
         }
         // Check if the user still exist
-        const { email } = req.body;
-        const user = yield (0, services_1.findUserByEmail)(email);
+        const { id } = decoded;
+        const user = yield (0, services_1.findUserById)({ id });
         if (!user) {
-            return next(new appError_1.default(401, `Invalid token or session has expired`));
+            return next(new utils_1.AppError(401, `Invalid token or session has expired`));
         }
         // Add user to res.locals
         res.locals.user = user;
@@ -48,9 +43,9 @@ const deserializeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     catch (err) {
         console.log('Error: (auth.controller -> deserializeUser)', err);
         if (err instanceof Error)
-            return next(new appError_1.default(res.statusCode, err.message));
+            return next(new utils_1.AppError(res.statusCode, err.message));
         else
-            return next(new appError_1.default(400, 'Something went Wrong'));
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 });
 exports.deserializeUser = deserializeUser;
@@ -58,7 +53,7 @@ const requireUser = (req, res, next) => {
     try {
         const { user } = res.locals;
         if (!user) {
-            return next(new appError_1.default(400, `Session has expired or user doesn't exist`));
+            return next(new utils_1.AppError(400, `Session has expired or user doesn't exist`));
         }
         res.locals.user = user;
         next();
@@ -66,9 +61,9 @@ const requireUser = (req, res, next) => {
     catch (err) {
         console.log('Error: (auth.controller -> requireUser)', err);
         if (err instanceof Error)
-            return next(new appError_1.default(res.statusCode, err.message));
+            return next(new utils_1.AppError(res.statusCode, err.message));
         else
-            return next(new appError_1.default(400, 'Something went Wrong'));
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 };
 exports.requireUser = requireUser;
@@ -83,35 +78,35 @@ const verifyTokenUrl = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             req.query.tk === undefined);
         if (!(queryObjectLength === 1 && req.query.tk && isValidToken) ||
             req.query.tk === undefined) {
-            next(new appError_1.default(400, 'Invalid URL'));
+            next(new utils_1.AppError(400, 'Invalid URL'));
         }
         // Validate the token
         if (isValidToken) {
             const id = (0, utils_1.verifyToken)(token).id;
-            const user = yield (0, services_1.findOneById)({ id });
+            const user = yield (0, services_1.findUserById)({ id });
             if (!user) {
-                next(new appError_1.default(401, 'User not found'));
+                next(new utils_1.AppError(401, 'User not found'));
             }
             else {
                 console.log('user.changePasswordToken: (auth.middleware -> verifyTokenUrl)', user.changePasswordToken);
                 console.log('token: (VerifyTokenUrl -> verifyTokenUrl)', token);
                 if (user.changePasswordToken !== token) {
-                    next(new appError_1.default(401, 'Token Invalid or expired'));
+                    next(new utils_1.AppError(401, 'Token Invalid or expired'));
                 }
                 res.locals.user = user;
                 next();
             }
         }
         else {
-            next(new appError_1.default(401, 'Invalid Token'));
+            next(new utils_1.AppError(401, 'Invalid Token'));
         }
     }
     catch (err) {
         console.log('Error: (auth.middleware -> verifyTokenUrl)', err);
         if (err instanceof Error)
-            return next(new appError_1.default(res.statusCode, err.message));
+            return next(new utils_1.AppError(res.statusCode, err.message));
         else
-            return next(new appError_1.default(400, 'Something went Wrong'));
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 });
 exports.verifyTokenUrl = verifyTokenUrl;

@@ -12,11 +12,11 @@ const router = express_1.default.Router();
 // GET Register user
 router.get('/register', controllers_1.getRegister);
 // POST Register user
-router.post('/register', controllers_1.register);
+router.post('/register', (0, utils_1.validate)(schemas_1.createUserSchema), controllers_1.register);
 // GET Login user
-router.get('/login', (0, utils_1.validate)(schemas_1.loginUserSchema), controllers_1.getLogin);
+router.get('/login', controllers_1.getLogin);
 // POST Login user
-router.post('/login', controllers_1.login);
+router.post('/login', (0, utils_1.validate)(schemas_1.loginUserSchema), controllers_1.login);
 // GET Logout user
 router.get('/logout', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.logout);
 // GET Refresh access token

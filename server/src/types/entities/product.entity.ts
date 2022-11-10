@@ -25,7 +25,7 @@ export class Product extends BaseResource {
   @JoinColumn({ name: 'publisher_id' })
   user: User;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   name!: string;
 
   @Column({ type: 'int', nullable: false })
@@ -40,14 +40,15 @@ export class Product extends BaseResource {
   category!: ProductCategory;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description?: string;
 
   @Column({ type: 'text', nullable: true })
-  additional_remarks: string;
+  additional_remarks?: string;
 
   @Column({
     type: 'boolean',
     nullable: true,
+    default: true,
   })
   is_available: boolean;
 

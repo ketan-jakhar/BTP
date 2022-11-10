@@ -22,6 +22,14 @@ exports.createUserSchema = (0, zod_1.object)({
         passwordConfirm: (0, zod_1.string)({
             required_error: 'Please confirm your password',
         }),
+        contactNumber: (0, zod_1.number)({
+            required_error: 'Contact number is required',
+            invalid_type_error: 'Please enter a valid contact number',
+        })
+            .int('Contact number must be an integer')
+            .positive('Contact number must be a positive number')
+            .min(1000000000, 'Please enter a valid contact number')
+            .max(9999999999, 'Please enter a valid contact number'),
         role: zod_1.z.optional(zod_1.z.nativeEnum(enums_1.UserRole)),
     }).refine(data => data.password === data.passwordConfirm, {
         path: ['passwordConfirm'],
@@ -33,7 +41,9 @@ exports.loginUserSchema = (0, zod_1.object)({
         email: (0, zod_1.string)({
             required_error: 'Email address is required',
             invalid_type_error: 'Please enter a valid name',
-        }).email('Invalid email address'),
+        })
+            .email('Invalid email address')
+            .endsWith('@lnmiit.ac.in', 'Please use your lnmiit email address'),
         password: (0, zod_1.string)({
             required_error: 'Password is required',
             invalid_type_error: 'Please enter a valid email address',

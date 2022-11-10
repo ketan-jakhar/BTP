@@ -57,15 +57,16 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: false }),
     __metadata("design:type", String)
-], Carpool.prototype, "drop_location", void 0);
+], Carpool.prototype, "destination", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: false }),
     __metadata("design:type", String)
-], Carpool.prototype, "pickup_location", void 0);
+], Carpool.prototype, "source", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'boolean',
         nullable: true,
+        default: false,
     }),
     __metadata("design:type", Boolean)
 ], Carpool.prototype, "is_completed", void 0);

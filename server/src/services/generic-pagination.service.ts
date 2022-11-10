@@ -1,4 +1,4 @@
-import { Repository, ObjectLiteral, UpdateResult, InsertResult } from 'typeorm';
+import { Repository, UpdateResult, InsertResult, DeleteResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { generateQuery } from '../helpers';
 import { BaseResource } from '../types/entities';
@@ -60,5 +60,11 @@ export abstract class AbstractPaginationService<T extends BaseResource> {
     const repository: Repository<T> = this.getRepository();
 
     return await repository.update(id, payload);
+  }
+
+  public async deleteResource(id: string): Promise<DeleteResult> {
+    const repository: Repository<T> = this.getRepository();
+
+    return await repository.delete(id);
   }
 }

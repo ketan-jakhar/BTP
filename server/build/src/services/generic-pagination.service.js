@@ -54,5 +54,11 @@ class AbstractPaginationService {
             return yield repository.update(id, payload);
         });
     }
+    deleteResource(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const repository = this.getRepository();
+            return yield repository.delete(id);
+        });
+    }
 }
 exports.AbstractPaginationService = AbstractPaginationService;

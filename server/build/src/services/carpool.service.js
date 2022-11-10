@@ -9,26 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserById = exports.findUserByEmail = exports.createUser = exports.UserService = void 0;
+exports.findCarpoolById = exports.createCarpool = exports.CarpoolService = void 0;
 const _1 = require(".");
 const utils_1 = require("../utils");
 const entities_1 = require("../types/entities");
 /**
- * User Pagination Service
+ * Carpool Pagination Service
  */
-class UserService extends _1.AbstractPaginationService {
+class CarpoolService extends _1.AbstractPaginationService {
     getRepository() {
-        return utils_1.AppDataSource.getRepository(entities_1.User);
+        return utils_1.AppDataSource.getRepository(entities_1.Carpool);
     }
 }
-exports.UserService = UserService;
-const userRepository = utils_1.AppDataSource.getRepository(entities_1.User);
-const createUser = (input) => __awaiter(void 0, void 0, void 0, function* () {
+exports.CarpoolService = CarpoolService;
+const carpoolRepository = utils_1.AppDataSource.getRepository(entities_1.Carpool);
+const createCarpool = (input) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Carpool input', input);
-    return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.User, input)));
+    return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Carpool, input)));
 });
-exports.createUser = createUser;
-const findUserByEmail = ({ email, }) => __awaiter(void 0, void 0, void 0, function* () { return yield userRepository.findOneBy({ email }); });
-exports.findUserByEmail = findUserByEmail;
-const findUserById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () { return yield userRepository.findOneBy({ id }); });
-exports.findUserById = findUserById;
+exports.createCarpool = createCarpool;
+const findCarpoolById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () { return yield carpoolRepository.findOneBy({ id }); });
+exports.findCarpoolById = findCarpoolById;

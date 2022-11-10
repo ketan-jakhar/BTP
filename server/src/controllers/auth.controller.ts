@@ -49,7 +49,11 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const { name, password }: { name: string; password: string } = req.body;
+    const {
+      name,
+      password,
+      contactNumber,
+    }: { name: string; password: string; contactNumber: number } = req.body;
     let { email }: { email: string } = req.body;
 
     // 1. Check if the user already exist
@@ -66,6 +70,7 @@ export const register = async (
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
+      contactNumber,
     });
 
     // 4. Send the response

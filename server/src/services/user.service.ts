@@ -16,10 +16,12 @@ export class UserService extends AbstractPaginationService<User> {
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const createUser = async (input: CreateUserInput): Promise<User> =>
-  (await AppDataSource.manager.save(
+export const createUser = async (input: CreateUserInput): Promise<User> => {
+  console.log('Carpool input', input);
+  return (await AppDataSource.manager.save(
     AppDataSource.manager.create(User, input)
   )) as User;
+};
 
 export const findUserByEmail = async ({
   email,

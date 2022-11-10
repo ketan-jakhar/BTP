@@ -40,7 +40,8 @@ exports.getRegister = getRegister;
 // POST /REGISTER
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password, email } = req.body;
+        const { name, password, contactNumber, } = req.body;
+        let { email } = req.body;
         // 1. Check if the user already exist
         const checkUser = yield (0, services_1.findUserByEmail)({ email });
         if (checkUser)
@@ -53,6 +54,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
             name,
             email: email.toLowerCase(),
             password: hashedPassword,
+            contactNumber,
         });
         // 4. Send the response
         res.status(201).json({
@@ -134,9 +136,11 @@ exports.login = login;
 const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { user } = res.locals;
+        // 1. Clear Cookies
         (0, utils_1.clearCookies)(res);
-        // Discard JWT
+        // 2. Discard JWT
         // discardJwt();
+        // 3. Send response
         res.status(200).json({
             status: 'success',
             message: 'Logged out successfully',
@@ -156,10 +160,11 @@ const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, 
     try {
         const { refresh_token } = req.cookies;
         const message = 'Could not refresh access token';
+        // 1. Check if refresh token exists
         if (!refresh_token) {
             return next(new utils_1.AppError(403, message));
         }
-        // Validate refresh token
+        // 2. Validate refresh token
         const decoded = (0, utils_1.verifyJwt)(refresh_token, 'refreshTokenPublicKey');
         console.log('Decoded:(auth.controller -> refreshtoken) ', decoded);
         if (!decoded) {
@@ -167,18 +172,19 @@ const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, 
         }
         // TODO: change it
         const { email } = req.body;
+        // 3. Check if the user still exists
         const user = (yield (0, services_1.findUserByEmail)({ email }));
         const { id, role } = user;
         const payload = { id, role };
-        //3. Sign new access token
+        // 4. Sign new access token
         const access_token = (0, utils_1.signJwt)(payload, 'accessTokenPrivateKey', {
             expiresIn: `${config_1.default.get('accessTokenExpiresIn')}m`,
         });
-        // 4. Add Cookies
+        // 5. Add Cookies
         res.cookie('access_token', access_token, utils_1.accessTokenCookieOptions);
         res.cookie('logged_in', true, Object.assign(Object.assign({}, utils_1.accessTokenCookieOptions), { httpOnly: false }));
         console.log('Res.cookie: (auth.controller -> refreshtoken)', res.cookie);
-        // 5. Send response
+        // 6. Send response
         res.status(200).json({
             status: 'success',
             access_token,

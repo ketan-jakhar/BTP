@@ -18,8 +18,7 @@ const config_1 = __importDefault(require("config"));
 const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
-// import AuthRoutes from './routes/auth.routes';
-// import { AppDataSource } from './utils/data-source';
+const routes_1 = require("./routes");
 const utils_1 = require("./utils");
 utils_1.AppDataSource.initialize()
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -43,7 +42,12 @@ utils_1.AppDataSource.initialize()
         credentials: true,
     }));
     // ROUTES
-    // app.use('/api/auth', AuthRoutes);
+    app.use('/api/auth', routes_1.AuthRoutes);
+    app.use('/api/user', routes_1.UserRoutes);
+    app.use('/api/carpool', routes_1.CarpoolRoutes);
+    app.use('/api/shop', routes_1.ProductRoutes);
+    app.use('/api/recycle', routes_1.RecycleRoutes);
+    app.use('/api', routes_1.MiscRoutes);
     // UNHANDLED ROUTE
     app.all('*', (req, res, next) => {
         next(new utils_1.AppError(404, `Route ${req.originalUrl} not found`));

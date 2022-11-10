@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:type", _1.User)
 ], Product.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
@@ -60,6 +60,7 @@ __decorate([
     (0, typeorm_1.Column)({
         type: 'boolean',
         nullable: true,
+        default: true,
     }),
     __metadata("design:type", Boolean)
 ], Product.prototype, "is_available", void 0);
