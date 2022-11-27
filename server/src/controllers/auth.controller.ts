@@ -23,7 +23,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { ObjectLiteral } from 'typeorm';
 
 // GET /REGISTER
-export const getRegister = (
+export const getRegisterHandler = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -43,7 +43,7 @@ export const getRegister = (
 };
 
 // POST /REGISTER
-export const register = async (
+export const registerHandler = async (
   req: Request<{}, {}, CreateUserInput>,
   res: Response,
   next: NextFunction
@@ -95,7 +95,11 @@ export const register = async (
 };
 
 // GET /LOGIN
-export const getLogin = (req: Request, res: Response, next: NextFunction) => {
+export const getLoginHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     return res.status(200).json({
       status: 'success',
@@ -111,7 +115,7 @@ export const getLogin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // POST /LOGIN
-export const login = async (
+export const loginHandler = async (
   req: Request<{}, {}, LoginUserInput>,
   res: Response,
   next: NextFunction
@@ -158,7 +162,7 @@ export const login = async (
 };
 
 // GET /LOGOUT
-export const logout = async (
+export const logoutHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -185,7 +189,7 @@ export const logout = async (
   }
 };
 
-// Refresh the access Token
+// GET Refresh access token
 export const refreshAccessTokenHandler = async (
   req: Request,
   res: Response,
@@ -248,6 +252,7 @@ export const refreshAccessTokenHandler = async (
   }
 };
 
+// GET Change password
 export const getForgotPasswordHandler = async (
   req: Request,
   res: Response,
@@ -266,6 +271,7 @@ export const getForgotPasswordHandler = async (
   }
 };
 
+// POST Forgot password (Send Email for Verification)
 export const forgotPasswordHandler = async (
   req: Request<{}, {}, ForgotPasswordInput>,
   res: Response,

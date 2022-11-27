@@ -9,9 +9,11 @@ import {
   OneToMany,
   OneToOne,
   Index,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import bcrypt from 'bcryptjs';
-import { Product, BaseResource, Carpool, CarpoolCompanion } from '.';
+import { Product, BaseResource, Carpool } from '.';
 import { UserRole } from '../enums';
 
 @Entity('users')
@@ -26,18 +28,16 @@ export class User extends BaseResource {
   @OneToMany(() => Product, (product: Product) => product.id)
   products: Product[];
 
+  // Establishing Many-to-Many Relationship with User
+  // Many Products belong to many Users
+  @ManyToMany(() => Product, (product: Product) => product.id)
+  @JoinTable({ name: 'product_cart' })
+  product_cart: Product[];
+
   // Establishing One-to-Many Relationship with Carpool
   // One User can have many Carpools
-  @OneToMany(() => Carpool, (carpool: Carpool) => carpool.id)
+  @ManyToMany(() => Carpool, (carpool: Carpool) => carpool.id)
   carpools: Carpool[];
-
-  //   // Establishing One-to-Many Relationship with Carpool Companions
-  //   // One User can have many Carpool Companions
-  //   @OneToMany(
-  //     () => CarpoolCompanion,
-  //     (carpool_companion: CarpoolCompanion) => carpool_companion.id
-  //   )
-  //   carpool_companions: CarpoolCompanion[];
 
   @Column({ nullable: true })
   name?: string;

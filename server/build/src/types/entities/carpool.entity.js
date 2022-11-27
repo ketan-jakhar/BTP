@@ -31,6 +31,11 @@ __decorate([
     __metadata("design:type", _1.User)
 ], Carpool.prototype, "user", void 0);
 __decorate([
+    (0, typeorm_1.ManyToMany)(() => _1.User, (user) => user.id),
+    (0, typeorm_1.JoinTable)({ name: 'carpool_companion_details' }),
+    __metadata("design:type", Array)
+], Carpool.prototype, "user_id", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Carpool.prototype, "name", void 0);

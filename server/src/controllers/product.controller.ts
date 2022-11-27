@@ -5,8 +5,9 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { findProductById, ProductService } from '../services';
 import { Product } from '../types/entities';
 import { SearchType } from '../types/enums';
-import { AppError } from '../utils';
+import { AppError, calculateCartTotal } from '../utils';
 
+// recent orders from here only
 export const getAllProducts = async (
   req: Request,
   res: Response,
@@ -119,6 +120,149 @@ export const deleteProduct = async (
     });
   } catch (err) {
     console.log('Error: (product.controller -> deleteProduct)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const getCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user) return next(new AppError(401, 'Unauthorized'));
+
+    const { params } = req.body;
+    const productService = new ProductService();
+    const cart = await productService.listResources(params);
+    const totalPrice = calculateCartTotal(cart);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        cart,
+        totalPrice,
+      },
+      message: 'Cart loaded successfully',
+    });
+  } catch (err) {
+    console.log('Error: (product.controller -> getCart)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const addToCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user) return next(new AppError(401, 'Unauthorized'));
+
+    const { id }: { id: string } = req.body;
+
+    const { payload }: { payload: QueryDeepPartialEntity<Product> } = req.body;
+    if (!payload) return next(new AppError(400, 'Invalid payload'));
+
+    const product: Product | null = await findProductById({ id });
+    if (!product) return next(new AppError(404, 'Product not found'));
+
+    if (!product.is_available)
+      return next(new AppError(400, 'Product not available for sell'));
+    const productService = new ProductService();
+    const cart = await productService.createResource(payload);
+
+    res.status(200).json({
+      status: 'success',
+      data: { cart },
+      message: 'Product added to cart successfully',
+    });
+  } catch (err) {
+    console.log('Error: (product.controller -> addToCart)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const removeFromCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user) return next(new AppError(401, 'Unauthorized'));
+
+    const { payload } = req.body;
+    const productService = new ProductService();
+    const cart = await productService.deleteResource(payload);
+
+    res.status(200).json({
+      status: 'success',
+      data: { cart },
+      message: 'Product removed from cart successfully',
+    });
+  } catch (err) {
+    console.log('Error: (product.controller -> removeFromCart)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const buyProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user) return next(new AppError(401, 'Unauthorized'));
+    const { params } = req.body;
+    const productService = new ProductService();
+    const cart = await productService.listResources(params);
+
+    cart.forEach(async (product, index) => {
+      try {
+        const { id } = product;
+        await productService.updateResource(id, {
+          is_available: false,
+          sell_time: new Date(),
+        });
+        // generateInvoice(product);
+      } catch (error) {
+        if (index <= cart.length - 1 && index >= 0) {
+          const count = index;
+          cart.forEach(async (product, index) => {
+            if (index <= count && index >= 0) {
+              const { id } = product;
+              await productService.updateResource(id, {
+                is_available: true,
+                sell_time: null,
+              });
+            }
+          });
+        }
+        console.log('Error: (product.controller -> buyProduct)', error);
+        if (error instanceof Error)
+          return next(new AppError(res.statusCode, error.message));
+      }
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: { cart },
+      message: 'Product bought successfully',
+    });
+  } catch (err) {
+    console.log('Error: (product.controller -> buyProduct)', err);
     if (err instanceof Error)
       return next(new AppError(res.statusCode, err.message));
     else return next(new AppError(400, 'Something went Wrong'));

@@ -6,6 +6,7 @@ import {
   createCarpool,
   updateCarpool,
   deleteCarpool,
+  joinCarpool,
 } from '../controllers';
 import { requireUser, deserializeUser } from '../middlewares';
 
@@ -23,5 +24,8 @@ router.put('/:id/update', deserializeUser, requireUser, updateCarpool);
 
 //DELETE /carpool/:id/delete
 router.delete('/:id/delete', deserializeUser, requireUser, deleteCarpool);
+
+// POST /carpool/:id/book/:uid
+router.post('/:id/book/:uid', deserializeUser, requireUser, joinCarpool);
 
 export default router;

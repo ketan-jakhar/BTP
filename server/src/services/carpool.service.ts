@@ -15,6 +15,7 @@ export class CarpoolService extends AbstractPaginationService<Carpool> {
 }
 
 const carpoolRepository = AppDataSource.getRepository(Carpool);
+//use moment.js to set date
 
 export const createCarpool = async (input: Carpool): Promise<Carpool> => {
   console.log('Carpool input', input);

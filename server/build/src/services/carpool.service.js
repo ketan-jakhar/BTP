@@ -23,6 +23,7 @@ class CarpoolService extends _1.AbstractPaginationService {
 }
 exports.CarpoolService = CarpoolService;
 const carpoolRepository = utils_1.AppDataSource.getRepository(entities_1.Carpool);
+//use moment.js to set date
 const createCarpool = (input) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Carpool input', input);
     return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Carpool, input)));

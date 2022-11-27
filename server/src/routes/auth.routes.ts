@@ -1,10 +1,10 @@
 import express from 'express';
 import {
-  getRegister,
-  register,
-  getLogin,
-  login,
-  logout,
+  getRegisterHandler,
+  registerHandler,
+  getLoginHandler,
+  loginHandler,
+  logoutHandler,
   refreshAccessTokenHandler,
   getForgotPasswordHandler,
   forgotPasswordHandler,
@@ -19,19 +19,19 @@ import { validate } from '../utils';
 const router = express.Router();
 
 // GET Register user
-router.get('/register', getRegister);
+router.get('/register', getRegisterHandler);
 
 // POST Register user
-router.post('/register', validate(createUserSchema), register);
+router.post('/register', validate(createUserSchema), registerHandler);
 
 // GET Login user
-router.get('/login', getLogin);
+router.get('/login', getLoginHandler);
 
 // POST Login user
-router.post('/login', validate(loginUserSchema), login);
+router.post('/login', validate(loginUserSchema), loginHandler);
 
 // GET Logout user
-router.get('/logout', deserializeUser, requireUser, logout);
+router.get('/logout', deserializeUser, requireUser, logoutHandler);
 
 // GET Refresh access token
 router.get('/refresh', refreshAccessTokenHandler);

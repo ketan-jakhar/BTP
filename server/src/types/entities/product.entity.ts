@@ -52,6 +52,6 @@ export class Product extends BaseResource {
   })
   is_available: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
-  sell_time: Date;
+  @Column({ nullable: true })
+  sell_time: Date | null;
 }

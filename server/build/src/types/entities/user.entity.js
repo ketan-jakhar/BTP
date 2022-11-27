@@ -44,7 +44,12 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "products", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => _1.Carpool, (carpool) => carpool.id),
+    (0, typeorm_1.ManyToMany)(() => _1.Product, (product) => product.id),
+    (0, typeorm_1.JoinTable)({ name: 'product_cart' }),
+    __metadata("design:type", Array)
+], User.prototype, "product_cart", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => _1.Carpool, (carpool) => carpool.id),
     __metadata("design:type", Array)
 ], User.prototype, "carpools", void 0);
 __decorate([

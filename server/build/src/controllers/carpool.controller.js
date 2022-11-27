@@ -62,6 +62,7 @@ const getCarpoolById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getCarpoolById = getCarpoolById;
 // Create carpool
+// use moment.js to set details
 const createCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { payload } = req.body;
