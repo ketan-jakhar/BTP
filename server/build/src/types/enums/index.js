@@ -18,3 +18,4 @@ __exportStar(require("./product-category.enum"), exports);
 __exportStar(require("./search-filter-operator.enum"), exports);
 __exportStar(require("./search-type.enum"), exports);
 __exportStar(require("./user-role.enum"), exports);
+__exportStar(require("./recycle-category.enum"), exports);

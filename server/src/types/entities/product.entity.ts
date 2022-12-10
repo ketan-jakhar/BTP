@@ -18,11 +18,11 @@ export class Product extends BaseResource {
   // Establishing Many-to-One Relationship with User
   // Many Products belong to a single User
   @Column({ nullable: false })
-  publisher_id: string;
-  @ManyToOne(() => User, (user: User) => user.id, {
+  user_id: string;
+  @ManyToOne(() => User, (user: User) => user.products, {
     eager: false,
   })
-  @JoinColumn({ name: 'publisher_id' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ nullable: false })
@@ -52,6 +52,6 @@ export class Product extends BaseResource {
   })
   is_available: boolean;
 
-  @Column({ nullable: true })
-  sell_time: Date | null;
+  @Column({ type: 'timestamp', nullable: true })
+  sell_time: string;
 }

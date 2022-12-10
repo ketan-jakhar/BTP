@@ -88,9 +88,9 @@ const verifyTokenUrl = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
                 next(new utils_1.AppError(401, 'User not found'));
             }
             else {
-                console.log('user.changePasswordToken: (auth.middleware -> verifyTokenUrl)', user.changePasswordToken);
+                console.log('user.changePasswordToken: (auth.middleware -> verifyTokenUrl)', user.change_password_token);
                 console.log('token: (VerifyTokenUrl -> verifyTokenUrl)', token);
-                if (user.changePasswordToken !== token) {
+                if (user.change_password_token !== token) {
                     next(new utils_1.AppError(401, 'Token Invalid or expired'));
                 }
                 res.locals.user = user;

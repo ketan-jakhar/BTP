@@ -7,7 +7,7 @@ import { User } from '../types/entities';
 import { SearchType } from '../types/enums';
 import { AppError } from '../utils';
 
-// Get user by id
+// Get user profile (self)
 export const getProfile = async (
   req: Request,
   res: Response,
@@ -33,24 +33,21 @@ export const getProfile = async (
 
 // Update user profile
 export const updateProfile = async (
-  req: Request<
-    {},
-    {},
-    { payload: QueryDeepPartialEntity<User> },
-    {}
-    // { user: any }
-  >,
+  req: Request<{}, {}, { payload: QueryDeepPartialEntity<User> }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    console.log('REQ BODY - \n', req.body);
     const { payload }: { payload: QueryDeepPartialEntity<User> } = req.body;
     const { id }: { id: string } = res.locals.user;
+    console.log('PAYLOAD - \n', payload);
+
     if (!id) return next(new AppError(400, 'User not found'));
 
     const userService = new UserService();
     const updatedUser = await userService.updateResource(id, payload);
-    if (!updatedUser) return next(new AppError(400, 'User not founddd'));
+    if (!updatedUser) return next(new AppError(400, 'User not found'));
 
     const user = await findUserById({ id });
 

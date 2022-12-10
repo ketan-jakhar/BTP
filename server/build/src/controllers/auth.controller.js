@@ -40,12 +40,12 @@ exports.getRegisterHandler = getRegisterHandler;
 // POST /REGISTER
 const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password, contactNumber, } = req.body;
+        const { name, password, contact_number, } = req.body;
         let { email } = req.body;
         // 1. Check if the user already exist
         const checkUser = yield (0, services_1.findUserByEmail)({ email });
         if (checkUser)
-            next(new utils_1.AppError(400, 'User with that email already exist'));
+            return next(new utils_1.AppError(400, 'User with that email already exist'));
         // 2. Hash the password
         const salt = yield bcryptjs_1.default.genSalt(10); // generate salt
         const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
@@ -54,7 +54,7 @@ const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             name,
             email: email.toLowerCase(),
             password: hashedPassword,
-            contactNumber,
+            contact_number,
         });
         // 4. Send the response
         res.status(201).json({
@@ -67,10 +67,11 @@ const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     catch (err) {
         console.log('Error: (auth.controller -> register)', err);
         if (err.code === '23505') {
-            return res.status(400).json({
-                status: 'fail',
-                message: 'User with that email already exist',
-            });
+            // return res.status(400).json({
+            //   status: 'error',
+            //   message: 'User with that email already exist',
+            // });
+            return next(new utils_1.AppError(400, 'User with that email already exist'));
         }
         if (err instanceof Error)
             return next(new utils_1.AppError(res.statusCode, err.message));
@@ -225,7 +226,7 @@ const forgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, void
         if (!token) {
             return next(new utils_1.AppError(500, 'Token not generated'));
         }
-        user.changePasswordToken = token;
+        user.change_password_token = token;
         yield user.save();
         const url = `${req.protocol}://${req.hostname}:${config_1.default.get('port')}/api/auth/change-password/?tk=${token}`;
         console.log('url: (userController -> createUserHandler)', url);

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recycle = void 0;
 const typeorm_1 = require("typeorm");
 const _1 = require(".");
+const enums_1 = require("../enums");
 let Recycle = class Recycle extends _1.BaseResource {
 };
 __decorate([
@@ -19,6 +20,45 @@ __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'uuid', nullable: false }),
     __metadata("design:type", String)
 ], Recycle.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], Recycle.prototype, "user_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => _1.User, (user) => user.recycles, {
+        eager: false,
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
+    __metadata("design:type", _1.User)
+], Recycle.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], Recycle.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        nullable: false,
+        enum: enums_1.RecycleCategory,
+    }),
+    __metadata("design:type", String)
+], Recycle.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Recycle.prototype, "remarks", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'boolean',
+        nullable: true,
+        default: true,
+    }),
+    __metadata("design:type", Boolean)
+], Recycle.prototype, "is_pickedup", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
+    __metadata("design:type", String)
+], Recycle.prototype, "recycle_pickup_time", void 0);
 Recycle = __decorate([
     (0, typeorm_1.Entity)('recycle')
 ], Recycle);

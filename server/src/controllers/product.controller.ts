@@ -2,6 +2,7 @@ require('dotenv').config;
 import config from 'config';
 import { Request, Response, NextFunction } from 'express';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import moment from 'moment';
 import { findProductById, ProductService } from '../services';
 import { Product } from '../types/entities';
 import { SearchType } from '../types/enums';
@@ -35,12 +36,12 @@ export const getAllProducts = async (
 };
 
 export const getProductById = async (
-  req: Request<{ id: string }>,
+  req: Request<{ id: string }, {}, {}>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { id } = req.params;
+    const { id }: { id: string } = req.params;
     const product = await findProductById({ id });
     if (!product) return next(new AppError(404, 'Product not found'));
     return res.status(200).json({
@@ -62,9 +63,13 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   try {
+    const user_id: string = res.locals.user.id;
     const { payload }: { payload: QueryDeepPartialEntity<Product> } = req.body;
     const productService = new ProductService();
-    const createdProduct = await productService.createResource(payload);
+    const createdProduct = await productService.createResource({
+      ...payload,
+      user_id,
+    });
     res.status(201).json({
       status: 'success',
       data: createdProduct,
@@ -88,13 +93,18 @@ export const updateProduct = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.params;
+    const { id }: { id: string } = req.params;
+    const user_id: string = res.locals.user.id;
+    const product = await findProductById({ id });
+    if (!product) return next(new AppError(404, 'Product not found'));
+    if (product.user_id !== user_id)
+      return next(new AppError(401, 'Unauthorized'));
     const { payload }: { payload: QueryDeepPartialEntity<Product> } = req.body;
     const productService = new ProductService();
     const updatedProduct = await productService.updateResource(id, payload);
     res.status(200).json({
       status: 'success',
-      data: { updateProduct },
+      data: { updatedProduct },
       message: 'Product updated successfully',
     });
   } catch (err) {
@@ -111,6 +121,11 @@ export const deleteProduct = async (
 ) => {
   try {
     const { id } = req.params;
+    const user_id: string = res.locals.user.id;
+    const product = await findProductById({ id });
+    if (!product) return next(new AppError(404, 'Product not found'));
+    if (product.user_id !== user_id)
+      return next(new AppError(401, 'Unauthorized'));
     const productService = new ProductService();
     const deletedProduct = await productService.deleteResource(id);
     res.status(200).json({
@@ -228,14 +243,20 @@ export const buyProduct = async (
     const { params } = req.body;
     const productService = new ProductService();
     const cart = await productService.listResources(params);
+    const updateResourcePayload: QueryDeepPartialEntity<Product> = {
+      is_available: false,
+      sell_time: moment().format('DD-MM-YYYY h:mm:ss a'),
+    };
+
+    const updateResourceErrorPayload: QueryDeepPartialEntity<Product> = {
+      is_available: true,
+      sell_time: '',
+    };
 
     cart.forEach(async (product, index) => {
       try {
         const { id } = product;
-        await productService.updateResource(id, {
-          is_available: false,
-          sell_time: new Date(),
-        });
+        await productService.updateResource(id, updateResourcePayload);
         // generateInvoice(product);
       } catch (error) {
         if (index <= cart.length - 1 && index >= 0) {
@@ -243,10 +264,10 @@ export const buyProduct = async (
           cart.forEach(async (product, index) => {
             if (index <= count && index >= 0) {
               const { id } = product;
-              await productService.updateResource(id, {
-                is_available: true,
-                sell_time: null,
-              });
+              await productService.updateResource(
+                id,
+                updateResourceErrorPayload
+              );
             }
           });
         }

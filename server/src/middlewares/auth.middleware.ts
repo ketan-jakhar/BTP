@@ -104,11 +104,11 @@ export const verifyTokenUrl = async (
       } else {
         console.log(
           'user.changePasswordToken: (auth.middleware -> verifyTokenUrl)',
-          user.changePasswordToken
+          user.change_password_token
         );
         console.log('token: (VerifyTokenUrl -> verifyTokenUrl)', token);
 
-        if (user.changePasswordToken !== token) {
+        if (user.change_password_token !== token) {
           next(new AppError(401, 'Token Invalid or expired'));
         }
 

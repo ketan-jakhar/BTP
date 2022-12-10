@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProductById = exports.getAllProducts = void 0;
+exports.buyProduct = exports.removeFromCart = exports.addToCart = exports.getCart = exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProductById = exports.getAllProducts = void 0;
 require('dotenv').config;
+const moment_1 = __importDefault(require("moment"));
 const services_1 = require("../services");
 const enums_1 = require("../types/enums");
 const utils_1 = require("../utils");
@@ -62,9 +66,10 @@ const getProductById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.getProductById = getProductById;
 const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const user_id = res.locals.user.id;
         const { payload } = req.body;
         const productService = new services_1.ProductService();
-        const createdProduct = yield productService.createResource(payload);
+        const createdProduct = yield productService.createResource(Object.assign(Object.assign({}, payload), { user_id }));
         res.status(201).json({
             status: 'success',
             data: createdProduct,
@@ -88,7 +93,7 @@ const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const updatedProduct = yield productService.updateResource(id, payload);
         res.status(200).json({
             status: 'success',
-            data: { updateProduct: exports.updateProduct },
+            data: { updatedProduct },
             message: 'Product updated successfully',
         });
     }
@@ -121,3 +126,136 @@ const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.deleteProduct = deleteProduct;
+const getCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
+        const { params } = req.body;
+        const productService = new services_1.ProductService();
+        const cart = yield productService.listResources(params);
+        const totalPrice = (0, utils_1.calculateCartTotal)(cart);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                cart,
+                totalPrice,
+            },
+            message: 'Cart loaded successfully',
+        });
+    }
+    catch (err) {
+        console.log('Error: (product.controller -> getCart)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+});
+exports.getCart = getCart;
+const addToCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
+        const { id } = req.body;
+        const { payload } = req.body;
+        if (!payload)
+            return next(new utils_1.AppError(400, 'Invalid payload'));
+        const product = yield (0, services_1.findProductById)({ id });
+        if (!product)
+            return next(new utils_1.AppError(404, 'Product not found'));
+        if (!product.is_available)
+            return next(new utils_1.AppError(400, 'Product not available for sell'));
+        const productService = new services_1.ProductService();
+        const cart = yield productService.createResource(payload);
+        res.status(200).json({
+            status: 'success',
+            data: { cart },
+            message: 'Product added to cart successfully',
+        });
+    }
+    catch (err) {
+        console.log('Error: (product.controller -> addToCart)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+});
+exports.addToCart = addToCart;
+const removeFromCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
+        const { payload } = req.body;
+        const productService = new services_1.ProductService();
+        const cart = yield productService.deleteResource(payload);
+        res.status(200).json({
+            status: 'success',
+            data: { cart },
+            message: 'Product removed from cart successfully',
+        });
+    }
+    catch (err) {
+        console.log('Error: (product.controller -> removeFromCart)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+});
+exports.removeFromCart = removeFromCart;
+const buyProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
+        const { params } = req.body;
+        const productService = new services_1.ProductService();
+        const cart = yield productService.listResources(params);
+        const updateResourcePayload = {
+            is_available: false,
+            sell_time: (0, moment_1.default)().format('DD-MM-YYYY h:mm:ss a'),
+        };
+        const updateResourceErrorPayload = {
+            is_available: true,
+            sell_time: '',
+        };
+        cart.forEach((product, index) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const { id } = product;
+                yield productService.updateResource(id, updateResourcePayload);
+                // generateInvoice(product);
+            }
+            catch (error) {
+                if (index <= cart.length - 1 && index >= 0) {
+                    const count = index;
+                    cart.forEach((product, index) => __awaiter(void 0, void 0, void 0, function* () {
+                        if (index <= count && index >= 0) {
+                            const { id } = product;
+                            yield productService.updateResource(id, updateResourceErrorPayload);
+                        }
+                    }));
+                }
+                console.log('Error: (product.controller -> buyProduct)', error);
+                if (error instanceof Error)
+                    return next(new utils_1.AppError(res.statusCode, error.message));
+            }
+        }));
+        res.status(200).json({
+            status: 'success',
+            data: { cart },
+            message: 'Product bought successfully',
+        });
+    }
+    catch (err) {
+        console.log('Error: (product.controller -> buyProduct)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+});
+exports.buyProduct = buyProduct;

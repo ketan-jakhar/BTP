@@ -25,5 +25,5 @@ router.get('/refresh', controllers_1.refreshAccessTokenHandler);
 // GET Change password
 router.get('/change-password', middlewares_1.verifyTokenUrl, controllers_1.getForgotPasswordHandler);
 // POST Forgot password (Send Email for Verification)
-router.post('/forgot-password', middlewares_1.deserializeUser, middlewares_1.requireUser, (0, utils_1.validate)(schemas_1.forgotPasswordSchema), controllers_1.forgotPasswordHandler);
+router.post('/forgot-password', (0, utils_1.validate)(schemas_1.forgotPasswordSchema), controllers_1.forgotPasswordHandler);
 exports.default = router;

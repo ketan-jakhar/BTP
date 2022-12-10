@@ -7,25 +7,43 @@ import {
   updateCarpool,
   deleteCarpool,
   joinCarpool,
+  leaveCarpool,
 } from '../controllers';
 import { requireUser, deserializeUser } from '../middlewares';
+import { updateCarpoolSchema, createCarpoolSchema } from '../schemas';
+import { validate } from '../utils';
 
-// GET /carpool
+// GET /api/carpool
 router.get('/all', deserializeUser, requireUser, getAllCarpools);
 
-// GET /carpool/:id
+// GET /api/carpool/:id
 router.get('/:id', deserializeUser, requireUser, getCarpoolById);
 
-// POST /carpool/create
-router.post('/create', deserializeUser, requireUser, createCarpool);
+// POST /api/carpool/create
+router.post(
+  '/create',
+  deserializeUser,
+  requireUser,
+  validate(createCarpoolSchema),
+  createCarpool
+);
 
-// PUT /carpool/:id/update
-router.put('/:id/update', deserializeUser, requireUser, updateCarpool);
+// PUT /api/carpool/:id/update
+router.put(
+  '/:id/update',
+  deserializeUser,
+  requireUser,
+  validate(updateCarpoolSchema),
+  updateCarpool
+);
 
-//DELETE /carpool/:id/delete
+//DELETE /api/carpool/:id/delete
 router.delete('/:id/delete', deserializeUser, requireUser, deleteCarpool);
 
-// POST /carpool/:id/book/:uid
-router.post('/:id/book/:uid', deserializeUser, requireUser, joinCarpool);
+// PUT /api/carpool/:id/book
+router.put('/:id/book', deserializeUser, requireUser, joinCarpool);
+
+// PUT /api/carpool/:id/leave
+router.put('/:id/leave', deserializeUser, requireUser, leaveCarpool);
 
 export default router;
