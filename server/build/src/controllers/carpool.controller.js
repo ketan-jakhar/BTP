@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCarpool = exports.updateCarpool = exports.createCarpool = exports.getCarpoolById = exports.getAllCarpools = void 0;
+exports.joinCarpool = exports.deleteCarpool = exports.updateCarpool = exports.createCarpool = exports.getCarpoolById = exports.getAllCarpools = void 0;
 require('dotenv').config;
 const services_1 = require("../services");
 const enums_1 = require("../types/enums");
@@ -61,7 +61,6 @@ const getCarpoolById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.getCarpoolById = getCarpoolById;
-// Create carpool
 const createCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { payload } = req.body;
@@ -71,6 +70,8 @@ const createCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             id: createdCarpool.identifiers[0].id,
         }));
         carpool.name = `${carpool.source} to ${carpool.destination}`;
+        const setDepartureTime = new Date(payload.departure_time);
+        carpool.departure_time = setDepartureTime;
         yield carpool.save();
         res.status(201).json({
             status: 'success',
@@ -128,3 +129,40 @@ const deleteCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.deleteCarpool = deleteCarpool;
+const joinCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = res.locals.user;
+        const uid = user.id;
+        const id = req.params.id;
+        const carpool = yield (0, services_1.findCarpoolById)({ id });
+        if (!carpool)
+            return next(new utils_1.AppError(404, 'Carpool not found'));
+        if (!user)
+            return next(new utils_1.AppError(404, 'User not found'));
+        if (carpool.rider_count < carpool.capacity)
+            carpool.rider_count++;
+        else
+            return next(new utils_1.AppError(400, 'Carpool maximum capacity reached'));
+        const { payload } = req.body;
+        const carpoolService = new services_1.CarpoolService();
+        const createBooking = yield carpoolService.updateResource(id, payload);
+        const bookingUser = (yield (0, services_1.findUserById)({ id: uid }));
+        if (bookingUser.id !== uid)
+            return next(new utils_1.AppError(404, 'Unauthorized request: Attempt to breach.'));
+        carpool.user_id.push(bookingUser);
+        yield carpool.save();
+        res.status(201).json({
+            status: 'success',
+            data: { createBooking, bookingUser, carpool },
+            message: 'Booking created successfully',
+        });
+    }
+    catch (err) {
+        console.log('Error: (carpool.controller -> createBooking)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+});
+exports.joinCarpool = joinCarpool;

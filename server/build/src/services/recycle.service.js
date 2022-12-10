@@ -24,9 +24,29 @@ class RecycleService extends _1.AbstractPaginationService {
 exports.RecycleService = RecycleService;
 const recycleRepository = utils_1.AppDataSource.getRepository(entities_1.Recycle);
 const createRecycle = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Recycle input', input);
-    return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Recycle, input)));
+    try {
+        console.log('Recycle input', input);
+        return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Recycle, input)));
+    }
+    catch (error) {
+        console.log('Error: (recycle.service -> createRecycle)', error);
+        if (error instanceof Error)
+            throw new utils_1.AppError(400, error.message);
+        else
+            throw new utils_1.AppError(400, 'Something went Wrong');
+    }
 });
 exports.createRecycle = createRecycle;
-const findRecycleById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () { return yield recycleRepository.findOneBy({ id }); });
+const findRecycleById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield recycleRepository.findOneBy({ id });
+    }
+    catch (error) {
+        console.log('Error: (recycle.service -> findRecycleById)', error);
+        if (error instanceof Error)
+            throw new utils_1.AppError(400, error.message);
+        else
+            throw new utils_1.AppError(400, 'Something went Wrong');
+    }
+});
 exports.findRecycleById = findRecycleById;

@@ -18,5 +18,4 @@ __exportStar(require("./base-resource.entity"), exports);
 __exportStar(require("./user.entity"), exports);
 __exportStar(require("./product.entity"), exports);
 __exportStar(require("./carpool.entity"), exports);
-__exportStar(require("./carpool-companions.entity"), exports);
 __exportStar(require("./recycle.entity"), exports);

@@ -6,3 +6,4 @@ export * from './jwt';
 export * from './changePasswordToken';
 export * from './signToken';
 export * from './cookieOptions';
+export * from './cart';

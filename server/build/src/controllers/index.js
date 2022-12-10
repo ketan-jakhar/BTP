@@ -17,4 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./auth.controller"), exports);
 __exportStar(require("./user.controller"), exports);
 __exportStar(require("./carpool.controller"), exports);
+__exportStar(require("./recycle.controller"), exports);
 __exportStar(require("./product.controller"), exports);

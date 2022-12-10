@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCarpoolSchema = void 0;
+exports.updateCarpoolSchema = exports.createCarpoolSchema = void 0;
 const zod_1 = require("zod");
 exports.createCarpoolSchema = (0, zod_1.object)({
     body: (0, zod_1.object)({
@@ -24,6 +24,13 @@ exports.createCarpoolSchema = (0, zod_1.object)({
             required_error: 'Price is required',
             invalid_type_error: 'Please enter a valid price',
         }),
+        additional_remarks: (0, zod_1.string)({
+            invalid_type_error: 'Please enter a valid additional_remarks',
+        }),
+    }),
+});
+exports.updateCarpoolSchema = (0, zod_1.object)({
+    body: (0, zod_1.object)({
         additional_remarks: (0, zod_1.string)({
             invalid_type_error: 'Please enter a valid additional_remarks',
         }),

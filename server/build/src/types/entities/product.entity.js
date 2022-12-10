@@ -23,12 +23,12 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
-], Product.prototype, "publisher_id", void 0);
+], Product.prototype, "user_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => _1.User, (user) => user.id, {
+    (0, typeorm_1.ManyToOne)(() => _1.User, (user) => user.products, {
         eager: false,
     }),
-    (0, typeorm_1.JoinColumn)({ name: 'publisher_id' }),
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", _1.User)
 ], Product.prototype, "user", void 0);
 __decorate([
@@ -66,7 +66,7 @@ __decorate([
 ], Product.prototype, "is_available", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Product.prototype, "sell_time", void 0);
 Product = __decorate([
     (0, typeorm_1.Entity)('products')

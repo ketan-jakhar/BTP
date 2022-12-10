@@ -1,10 +1,10 @@
 import express from 'express';
 import {
-  getRegister,
-  register,
-  getLogin,
-  login,
-  logout,
+  getRegisterHandler,
+  registerHandler,
+  getLoginHandler,
+  loginHandler,
+  logoutHandler,
   refreshAccessTokenHandler,
   getForgotPasswordHandler,
   forgotPasswordHandler,
@@ -19,32 +19,39 @@ import { validate } from '../utils';
 const router = express.Router();
 
 // GET Register user
-router.get('/register', getRegister);
+// GET /api/auth/register
+router.get('/register', getRegisterHandler);
 
 // POST Register user
-router.post('/register', validate(createUserSchema), register);
+// POST /api/auth/register
+router.post('/register', validate(createUserSchema), registerHandler);
 
 // GET Login user
-router.get('/login', getLogin);
+// GET /api/auth/login
+router.get('/login', getLoginHandler);
 
 // POST Login user
-router.post('/login', validate(loginUserSchema), login);
+// POST /api/auth/login
+router.post('/login', validate(loginUserSchema), loginHandler);
 
 // GET Logout user
-router.get('/logout', deserializeUser, requireUser, logout);
+// GET /api/auth/logout
+router.get('/logout', deserializeUser, requireUser, logoutHandler);
 
 // GET Refresh access token
+// GET /api/auth/refresh
 router.get('/refresh', refreshAccessTokenHandler);
 
 // TODO: Add validate(forgotPasswordSchema)
 // GET Change password
+// GET /api/auth/change-password
 router.get('/change-password', verifyTokenUrl, getForgotPasswordHandler);
 
 // POST Forgot password (Send Email for Verification)
+// POST /api/auth/forgot-password
 router.post(
   '/forgot-password',
-  deserializeUser,
-  requireUser,
+
   validate(forgotPasswordSchema),
   forgotPasswordHandler
 );

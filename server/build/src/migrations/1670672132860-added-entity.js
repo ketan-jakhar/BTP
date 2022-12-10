@@ -9,20 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addedEntity1668112804067 = void 0;
-class addedEntity1668112804067 {
+exports.addedEntity1670672132860 = void 0;
+class addedEntity1670672132860 {
     constructor() {
-        this.name = 'addedEntity1668112804067';
+        this.name = 'addedEntity1670672132860';
     }
     up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`ALTER TABLE "products" ALTER COLUMN "name" SET NOT NULL`);
+            yield queryRunner.query(`ALTER TABLE "users" RENAME COLUMN "changePasswordToken" TO "change_password_token"`);
         });
     }
     down(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`ALTER TABLE "products" ALTER COLUMN "name" DROP NOT NULL`);
+            yield queryRunner.query(`ALTER TABLE "users" RENAME COLUMN "change_password_token" TO "changePasswordToken"`);
         });
     }
 }
-exports.addedEntity1668112804067 = addedEntity1668112804067;
+exports.addedEntity1670672132860 = addedEntity1670672132860;

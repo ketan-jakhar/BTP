@@ -5,6 +5,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { User, BaseResource } from '.';
 
@@ -23,6 +25,10 @@ export class Carpool extends BaseResource {
   })
   @JoinColumn({ name: 'publisher_id' })
   user: User;
+
+  @ManyToMany(() => User, (user: User) => user.id)
+  @JoinTable({ name: 'carpool_companion_details' })
+  user_id: User[];
 
   @Column({ nullable: true })
   name!: string;

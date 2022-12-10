@@ -34,3 +34,9 @@ export const findUserById = async ({
 }: {
   id: string;
 }): Promise<User | null> => await userRepository.findOneBy({ id });
+
+export const findUserByContactNumber = async ({
+  contact_number,
+}: {
+  contact_number: number;
+}): Promise<User | null> => await userRepository.findOneBy({ contact_number });

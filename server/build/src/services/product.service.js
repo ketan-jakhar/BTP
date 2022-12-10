@@ -24,9 +24,29 @@ class ProductService extends _1.AbstractPaginationService {
 exports.ProductService = ProductService;
 const productRepository = utils_1.AppDataSource.getRepository(entities_1.Product);
 const createProduct = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Product input', input);
-    return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Product, input)));
+    try {
+        console.log('Product input', input);
+        return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.Product, input)));
+    }
+    catch (error) {
+        console.log('Error: (product.service -> createProduct)', error);
+        if (error instanceof Error)
+            throw new utils_1.AppError(400, error.message);
+        else
+            throw new utils_1.AppError(400, 'Something went Wrong');
+    }
 });
 exports.createProduct = createProduct;
-const findProductById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () { return yield productRepository.findOneBy({ id }); });
+const findProductById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield productRepository.findOneBy({ id });
+    }
+    catch (error) {
+        console.log('Error: (product.service -> findProductById)', error);
+        if (error instanceof Error)
+            throw new utils_1.AppError(400, error.message);
+        else
+            throw new utils_1.AppError(400, 'Something went Wrong');
+    }
+});
 exports.findProductById = findProductById;

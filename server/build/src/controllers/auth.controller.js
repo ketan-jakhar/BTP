@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forgotPasswordHandler = exports.getForgotPasswordHandler = exports.refreshAccessTokenHandler = exports.logout = exports.login = exports.getLogin = exports.register = exports.getRegister = void 0;
+exports.forgotPasswordHandler = exports.getForgotPasswordHandler = exports.refreshAccessTokenHandler = exports.logoutHandler = exports.loginHandler = exports.getLoginHandler = exports.registerHandler = exports.getRegisterHandler = void 0;
 require('dotenv').config;
 const config_1 = __importDefault(require("config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -20,7 +20,7 @@ const services_1 = require("../services");
 const utils_1 = require("../utils");
 const entities_1 = require("../types/entities");
 // GET /REGISTER
-const getRegister = (req, res, next) => {
+const getRegisterHandler = (req, res, next) => {
     try {
         return res.status(200).json({
             status: 'success',
@@ -36,16 +36,16 @@ const getRegister = (req, res, next) => {
             return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 };
-exports.getRegister = getRegister;
+exports.getRegisterHandler = getRegisterHandler;
 // POST /REGISTER
-const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, password, contactNumber, } = req.body;
+        const { name, password, contact_number, } = req.body;
         let { email } = req.body;
         // 1. Check if the user already exist
         const checkUser = yield (0, services_1.findUserByEmail)({ email });
         if (checkUser)
-            next(new utils_1.AppError(400, 'User with that email already exist'));
+            return next(new utils_1.AppError(400, 'User with that email already exist'));
         // 2. Hash the password
         const salt = yield bcryptjs_1.default.genSalt(10); // generate salt
         const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
@@ -54,7 +54,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
             name,
             email: email.toLowerCase(),
             password: hashedPassword,
-            contactNumber,
+            contact_number,
         });
         // 4. Send the response
         res.status(201).json({
@@ -67,10 +67,11 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     catch (err) {
         console.log('Error: (auth.controller -> register)', err);
         if (err.code === '23505') {
-            return res.status(400).json({
-                status: 'fail',
-                message: 'User with that email already exist',
-            });
+            // return res.status(400).json({
+            //   status: 'error',
+            //   message: 'User with that email already exist',
+            // });
+            return next(new utils_1.AppError(400, 'User with that email already exist'));
         }
         if (err instanceof Error)
             return next(new utils_1.AppError(res.statusCode, err.message));
@@ -78,9 +79,9 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
             return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 });
-exports.register = register;
+exports.registerHandler = registerHandler;
 // GET /LOGIN
-const getLogin = (req, res, next) => {
+const getLoginHandler = (req, res, next) => {
     try {
         return res.status(200).json({
             status: 'success',
@@ -96,9 +97,9 @@ const getLogin = (req, res, next) => {
             return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 };
-exports.getLogin = getLogin;
+exports.getLoginHandler = getLoginHandler;
 // POST /LOGIN
-const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const loginHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { password } = req.body;
         let { email } = req.body;
@@ -131,9 +132,9 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 });
-exports.login = login;
+exports.loginHandler = loginHandler;
 // GET /LOGOUT
-const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const logoutHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { user } = res.locals;
         // 1. Clear Cookies
@@ -154,8 +155,8 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
             return next(new utils_1.AppError(400, 'Something went Wrong'));
     }
 });
-exports.logout = logout;
-// Refresh the access Token
+exports.logoutHandler = logoutHandler;
+// GET Refresh access token
 const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { refresh_token } = req.cookies;
@@ -199,6 +200,7 @@ const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, 
     }
 });
 exports.refreshAccessTokenHandler = refreshAccessTokenHandler;
+// GET Change password
 const getForgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         return res.status(200).json({
@@ -215,6 +217,7 @@ const getForgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, v
     }
 });
 exports.getForgotPasswordHandler = getForgotPasswordHandler;
+// POST Forgot password (Send Email for Verification)
 const forgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { user } = res.locals;
@@ -223,7 +226,7 @@ const forgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, void
         if (!token) {
             return next(new utils_1.AppError(500, 'Token not generated'));
         }
-        user.changePasswordToken = token;
+        user.change_password_token = token;
         yield user.save();
         const url = `${req.protocol}://${req.hostname}:${config_1.default.get('port')}/api/auth/change-password/?tk=${token}`;
         console.log('url: (userController -> createUserHandler)', url);

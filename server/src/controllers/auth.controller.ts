@@ -7,7 +7,12 @@ import {
   ForgotPasswordInput,
   LoginUserInput,
 } from '../schemas';
-import { createUser, findUserByEmail, sendEmail } from '../services';
+import {
+  createUser,
+  findUserByContactNumber,
+  findUserByEmail,
+  sendEmail,
+} from '../services';
 import {
   AppError,
   signTokens,
@@ -23,7 +28,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { ObjectLiteral } from 'typeorm';
 
 // GET /REGISTER
-export const getRegister = (
+export const getRegisterHandler = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -43,7 +48,7 @@ export const getRegister = (
 };
 
 // POST /REGISTER
-export const register = async (
+export const registerHandler = async (
   req: Request<{}, {}, CreateUserInput>,
   res: Response,
   next: NextFunction
@@ -52,14 +57,22 @@ export const register = async (
     const {
       name,
       password,
-      contactNumber,
-    }: { name: string; password: string; contactNumber: number } = req.body;
+      contact_number,
+    }: { name: string; password: string; contact_number: number } = req.body;
     let { email }: { email: string } = req.body;
 
-    // 1. Check if the user already exist
-    const checkUser = await findUserByEmail({ email });
-    if (checkUser)
-      next(new AppError(400, 'User with that email already exist'));
+    // 1. Search if the user already exist
+    const searchUserByEmail = await findUserByEmail({ email });
+    if (searchUserByEmail)
+      return next(new AppError(400, 'User with that email already exist'));
+
+    const searchUserByContactNumber = await findUserByContactNumber({
+      contact_number,
+    });
+    if (searchUserByContactNumber)
+      return next(
+        new AppError(400, 'User with that contact number already exist')
+      );
 
     // 2. Hash the password
     const salt = await bcrypt.genSalt(10); // generate salt
@@ -70,7 +83,7 @@ export const register = async (
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
-      contactNumber,
+      contact_number,
     });
 
     // 4. Send the response
@@ -83,10 +96,12 @@ export const register = async (
   } catch (err: any) {
     console.log('Error: (auth.controller -> register)', err);
     if (err.code === '23505') {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'User with that email already exist',
-      });
+      return next(
+        new AppError(
+          400,
+          'User with that email or contact number already exist'
+        )
+      );
     }
     if (err instanceof Error)
       return next(new AppError(res.statusCode, err.message));
@@ -95,7 +110,11 @@ export const register = async (
 };
 
 // GET /LOGIN
-export const getLogin = (req: Request, res: Response, next: NextFunction) => {
+export const getLoginHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     return res.status(200).json({
       status: 'success',
@@ -111,7 +130,7 @@ export const getLogin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // POST /LOGIN
-export const login = async (
+export const loginHandler = async (
   req: Request<{}, {}, LoginUserInput>,
   res: Response,
   next: NextFunction
@@ -144,10 +163,15 @@ export const login = async (
 
     console.log('Res.cookie: (auth.controller -> login)', res.cookie);
 
-    // 4. Send response
+    // 4. Update last_login_at
+    user.last_login_at = new Date();
+    user.save();
+
+    // 5. Send response
     res.status(200).json({
       status: 'success',
       access_token,
+      last_login_at: user.last_login_at,
     });
   } catch (err: any) {
     console.log('Error: (auth.controller -> login)', err);
@@ -158,7 +182,7 @@ export const login = async (
 };
 
 // GET /LOGOUT
-export const logout = async (
+export const logoutHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -185,7 +209,7 @@ export const logout = async (
   }
 };
 
-// Refresh the access Token
+// GET Refresh access token
 export const refreshAccessTokenHandler = async (
   req: Request,
   res: Response,
@@ -248,6 +272,7 @@ export const refreshAccessTokenHandler = async (
   }
 };
 
+// GET Change password
 export const getForgotPasswordHandler = async (
   req: Request,
   res: Response,
@@ -266,6 +291,7 @@ export const getForgotPasswordHandler = async (
   }
 };
 
+// POST Forgot password (Send Email for Verification)
 export const forgotPasswordHandler = async (
   req: Request<{}, {}, ForgotPasswordInput>,
   res: Response,
@@ -283,7 +309,7 @@ export const forgotPasswordHandler = async (
     if (!token) {
       return next(new AppError(500, 'Token not generated'));
     }
-    user.changePasswordToken = token;
+    user.change_password_token = token;
     await user.save();
 
     const url: string = `${req.protocol}://${req.hostname}:${config.get<number>(

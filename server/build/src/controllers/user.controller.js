@@ -48,7 +48,7 @@ const updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const userService = new services_1.UserService();
         const updatedUser = yield userService.updateResource(id, payload);
         if (!updatedUser)
-            return next(new utils_1.AppError(400, 'User not founddd'));
+            return next(new utils_1.AppError(400, 'User not found'));
         const user = yield (0, services_1.findUserById)({ id });
         console.log('UPDATED USER - \n', updatedUser);
         res.status(200).json({

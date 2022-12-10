@@ -28,4 +28,14 @@ export const createCarpoolSchema = object({
   }),
 });
 
+export const updateCarpoolSchema = object({
+  body: object({
+    additional_remarks: string({
+      invalid_type_error: 'Please enter a valid additional_remarks',
+    }),
+  }),
+});
+
 export type CreateCarpoolInput = TypeOf<typeof createCarpoolSchema>['body'];
+
+export type UpdateCarpoolInput = TypeOf<typeof updateCarpoolSchema>['body'];

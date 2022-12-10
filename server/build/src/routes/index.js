@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MiscRoutes = exports.RecycleRoutes = exports.UserRoutes = exports.ProductRoutes = exports.CarpoolRoutes = exports.AuthRoutes = void 0;
+exports.MiscRoutes = exports.RecycleRoutes = exports.UserRoutes = exports.ProductRoutes = exports.CarpoolRoutes = exports.AuthRoutes = exports.AdminRoutes = void 0;
+var admin_routes_1 = require("./admin.routes");
+Object.defineProperty(exports, "AdminRoutes", { enumerable: true, get: function () { return __importDefault(admin_routes_1).default; } });
 var auth_routes_1 = require("./auth.routes");
 Object.defineProperty(exports, "AuthRoutes", { enumerable: true, get: function () { return __importDefault(auth_routes_1).default; } });
 var carpool_routes_1 = require("./carpool.routes");

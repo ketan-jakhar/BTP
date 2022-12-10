@@ -40,11 +40,20 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => _1.Product, (product) => product.id),
+    (0, typeorm_1.OneToMany)(() => _1.Product, (product) => product.user),
     __metadata("design:type", Array)
 ], User.prototype, "products", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => _1.Carpool, (carpool) => carpool.id),
+    (0, typeorm_1.ManyToMany)(() => _1.Product, (product) => product.id),
+    (0, typeorm_1.JoinTable)({ name: 'product_cart' }),
+    __metadata("design:type", Array)
+], User.prototype, "product_cart", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => _1.Recycle, (recycle) => recycle.user),
+    __metadata("design:type", Array)
+], User.prototype, "recycles", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => _1.Carpool, (carpool) => carpool.id),
     __metadata("design:type", Array)
 ], User.prototype, "carpools", void 0);
 __decorate([
@@ -60,7 +69,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'bigint', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'bigint', nullable: false, unique: true }),
     __metadata("design:type", Number)
 ], User.prototype, "contact_number", void 0);
 __decorate([
@@ -82,13 +91,14 @@ __decorate([
         nullable: true,
     }),
     __metadata("design:type", String)
-], User.prototype, "changePasswordToken", void 0);
+], User.prototype, "change_password_token", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], User.prototype, "last_login_at", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)('users'),
-    (0, typeorm_1.Unique)(['email'])
+    (0, typeorm_1.Unique)(['email']),
+    (0, typeorm_1.Unique)(['contact_number'])
 ], User);
 exports.User = User;
