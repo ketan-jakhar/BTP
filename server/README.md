@@ -169,7 +169,7 @@ Successful Operation
 ```
 
 ```js
-GET /api/auth/login
+GET /api/auth/logout
 
 Responses : application/json
 Example Value :
