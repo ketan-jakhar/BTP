@@ -48,11 +48,17 @@ export class Carpool extends BaseResource {
   @Column({ type: 'int', nullable: false })
   rider_count!: number;
 
+  @Column({ type: 'int', nullable: false })
+  publisher_rider_count!: number;
+
   @Column({ type: 'text', nullable: false })
   destination!: string;
 
   @Column({ type: 'text', nullable: false })
   source!: string;
+
+  @Column({ type: 'text', nullable: true })
+  mapping: string;
 
   @Column({
     type: 'boolean',

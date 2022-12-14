@@ -40,10 +40,13 @@ export class Product extends BaseResource {
   category!: ProductCategory;
 
   @Column({ type: 'text', nullable: true })
-  description?: string;
+  img_url?: string | null;
 
   @Column({ type: 'text', nullable: true })
-  additional_remarks?: string;
+  description?: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  additional_remarks?: string | null;
 
   @Column({
     type: 'boolean',

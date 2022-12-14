@@ -6,8 +6,6 @@ import { CarpoolService, findCarpoolById, findUserById } from '../services';
 import { Carpool, User } from '../types/entities';
 import { SearchType } from '../types/enums';
 import { AppError } from '../utils';
-import { UserService } from '../services/user.service';
-import { UpdateCarpoolInput } from '../schemas';
 
 // Get all carpools
 export const getAllCarpools = async (
@@ -16,8 +14,8 @@ export const getAllCarpools = async (
   next: NextFunction
 ) => {
   try {
-    const { params } = req.body;
-
+    req.body.params = JSON.parse(JSON.stringify({}));
+    const params = req.body.params;
     const carpoolService = new CarpoolService();
     let carpools;
     if (params.searchType == SearchType.COUNT)
@@ -66,9 +64,15 @@ export const createCarpool = async (
   next: NextFunction
 ) => {
   try {
+    const { id }: { id: string } = res.locals.user;
+    if (!id) return next(new AppError(401, 'Unauthorized'));
     const { payload }: { payload: QueryDeepPartialEntity<Carpool> } = req.body;
     const carpoolService = new CarpoolService();
-    const createdCarpool = await carpoolService.createResource(payload);
+    const createdCarpool = await carpoolService.createResource({
+      ...payload,
+      publisher_rider_count: payload.rider_count,
+      publisher_id: id,
+    });
 
     const carpool = (await findCarpoolById({
       id: createdCarpool.identifiers[0].id,
@@ -76,6 +80,7 @@ export const createCarpool = async (
     carpool.name = `${carpool.source} to ${carpool.destination}`;
     const setDepartureTime = new Date(payload.departure_time as string);
     carpool.departure_time = setDepartureTime;
+    // carpool.publisher_rider_count = carpool.rider_count;
     await carpool.save();
 
     res.status(201).json({
@@ -165,16 +170,18 @@ export const joinCarpool = async (
 
     if (!user) return next(new AppError(404, 'User not found'));
 
-    const carpool = await findCarpoolById({ id });
+    const carpool: Carpool | null = await findCarpoolById({ id });
     if (!carpool) return next(new AppError(404, 'Carpool not found'));
 
-    if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
-    else return next(new AppError(400, 'Carpool maximum capacity reached'));
+    // if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
+    // else return next(new AppError(400, 'Carpool maximum capacity reached'));
 
-    const { payload }: { payload: QueryDeepPartialEntity<Carpool> } = req.body;
-    const carpoolService = new CarpoolService();
-    const createBooking = await carpoolService.updateResource(id, payload);
-    const bookingUser = (await findUserById({ id: uid })) as User;
+    // const { payload }: { payload: QueryDeepPartialEntity<Carpool> } = req.body;
+    // const carpoolService = new CarpoolService();
+    // const createBooking = await carpoolService.updateResource(id, payload);
+    const bookingUser = await findUserById({ id: uid });
+
+    if (!bookingUser) return next(new AppError(404, 'User not found'));
 
     if (bookingUser.id !== uid)
       return next(
@@ -185,13 +192,41 @@ export const joinCarpool = async (
       return next(
         new AppError(403, 'Forbidden. You cannot book your own carpool.')
       );
+    console.log(carpool.user_id);
 
-    carpool.user_id.push(bookingUser);
+    const riderExists = (str: string) => {
+      let arr = str.split('lnmiit');
+      for (let e in arr) {
+        if (e === bookingUser.id) return true;
+      }
+      return false;
+    };
+
+    if (carpool.user_id === null || carpool.user_id === undefined) {
+      if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
+      else return next(new AppError(400, 'Carpool maximum capacity reached'));
+      // carpool.user_id = [bookingUser];
+      if (carpool.mapping.includes(`${bookingUser.id}lnmiit`)) {
+        return next(new AppError(400, 'You have already booked this carpool'));
+      } else carpool.mapping += `${bookingUser.id}lnmiit`;
+    } else if (riderExists(carpool.mapping)) {
+      carpool.rider_count--;
+      console.log("You've already booked this carpool ", carpool.mapping);
+      return next(new AppError(400, 'You have already booked this carpool'));
+    } else {
+      if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
+      else return next(new AppError(400, 'Carpool maximum capacity reached'));
+      // carpool.user_id.push(bookingUser);
+      carpool.mapping = carpool.mapping + `${bookingUser.id}lnmiit`;
+    }
+
+    // if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
+    // else return next(new AppError(400, 'Carpool maximum capacity reached'));
 
     await carpool.save();
     res.status(201).json({
       status: 'success',
-      data: { createBooking, bookingUser, carpool },
+      data: { carpool },
       message: 'Booking created successfully',
     });
   } catch (err: any) {
@@ -221,10 +256,18 @@ export const leaveCarpool = async (
       return next(
         new AppError(403, 'Forbidden. You cannot leave your own carpool.')
       );
+    console.log(carpool.user_id);
 
-    if (carpool.user_id.some(user => user.id === uid)) {
-      carpool.user_id = carpool.user_id.filter(user => user.id !== uid);
-    } else return next(new AppError(404, 'Something went wrong.'));
+    if (carpool.rider_count === carpool.publisher_rider_count) {
+      return next(new AppError(400, 'You have not booked this carpool'));
+    }
+
+    // if (carpool.user_id.some(user => user.id === uid)) {
+    //   carpool.user_id = carpool.user_id.filter(user => user.id !== uid);
+    // } else return next(new AppError(404, 'Something went wrong.'));
+
+    carpool.mapping = carpool.mapping.replace(`${uid}lnmiit`, '');
+    carpool.rider_count--;
 
     await carpool.save();
     res.status(201).json({

@@ -50,11 +50,15 @@ __decorate([
 ], Product.prototype, "category", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: true }),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
+], Product.prototype, "img_url", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", Object)
 ], Product.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: true }),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], Product.prototype, "additional_remarks", void 0);
 __decorate([
     (0, typeorm_1.Column)({

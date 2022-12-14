@@ -9,16 +9,18 @@ const controllers_1 = require("../controllers");
 const middlewares_1 = require("../middlewares");
 const schemas_1 = require("../schemas");
 const utils_1 = require("../utils");
-// GET /carpool
+// GET /api/carpool
 router.get('/all', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.getAllCarpools);
-// GET /carpool/:id
+// GET /api/carpool/:id
 router.get('/:id', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.getCarpoolById);
-// POST /carpool/create
+// POST /api/carpool/create
 router.post('/create', middlewares_1.deserializeUser, middlewares_1.requireUser, (0, utils_1.validate)(schemas_1.createCarpoolSchema), controllers_1.createCarpool);
-// PUT /carpool/:id/update
+// PUT /api/carpool/:id/update
 router.put('/:id/update', middlewares_1.deserializeUser, middlewares_1.requireUser, (0, utils_1.validate)(schemas_1.updateCarpoolSchema), controllers_1.updateCarpool);
-//DELETE /carpool/:id/delete
+//DELETE /api/carpool/:id/delete
 router.delete('/:id/delete', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.deleteCarpool);
-// POST /carpool/:id/book/:uid
-router.post('/:id/book/:uid', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.joinCarpool);
+// PUT /api/carpool/:id/book
+router.put('/:id/book', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.joinCarpool);
+// PUT /api/carpool/:id/leave
+router.put('/:id/leave', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.leaveCarpool);
 exports.default = router;

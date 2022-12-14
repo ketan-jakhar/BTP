@@ -14,7 +14,9 @@ export const getAllRecycleHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { params } = req.body;
+    // const { params } = req.body;
+    req.body.params = JSON.parse(JSON.stringify({}));
+    const params = req.body.params;
 
     const recycleService = new RecycleService();
     let recycles;

@@ -15,8 +15,9 @@ export const getAllProducts = async (
   next: NextFunction
 ) => {
   try {
-    const { params } = req.body;
-
+    // const { params } = req.body;
+    req.body.params = JSON.parse(JSON.stringify({}));
+    const params = req.body.params;
     const productService = new ProductService();
     let products;
     if (params.searchType == SearchType.COUNT)

@@ -1,76 +1,150 @@
+import { NavLink } from "react-router-dom";
+
 export const sliderItems = [
-    {
-      id: 1,
-      img: "https://i.ibb.co/XsdmR2c/1.png",
-      title: "SUMMER SALE",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-      bg: "f5fafd",
-    },
-    {
-      id: 2,
-      img: "https://i.ibb.co/DG69bQ4/2.png",
-      title: "AUTUMN COLLECTION",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-      bg: "fcf1ed",
-    },
-    {
-      id: 3,
-      img: "https://i.ibb.co/cXFnLLV/3.png",
-      title: "LOUNGEWEAR LOVE",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-      bg: "fbf0f4",
-    },
-  ];
+	{
+		id: 1,
+		img: "https://i.ibb.co/cXFnLLV/3.png",
+		title: (
+			<NavLink style={{ color: "black" }} to='/shop'>
+				Buy&Sell
+			</NavLink>
+		),
+		desc: "New Arrivals!!",
+		bg: "f5fafd",
+	},
+	{
+		id: 2,
+		img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOm3J8udvv4ElTDt6e-ijl5FL_p_k3F9P0eg&usqp=CAU",
+		title: (
+			<NavLink style={{ color: "black" }} to='/carpool'>
+				Car Pool
+			</NavLink>
+		),
+		desc: "POOL YOUR VEHICLE HERE, AND SAVE MONEY!!",
+		bg: "fcf1ed",
+	},
+	{
+		id: 3,
+		img: "https://nationaltoday.com/wp-content/uploads/2022/07/5-Recycle-Awareness-Week.jpg.webp",
+		title: (
+			<NavLink style={{ color: "black" }} to='/recycle'>
+				Recycle
+			</NavLink>
+		),
+		desc: "DON'T THROW IT, RECYCLE IT!!",
+		bg: "fbf0f4",
+	},
+];
 
-  export const categories = [
-    {
-      id: 1,
-      img: "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "SHIRT STYLE!",
-    },
-    {
-      id: 2,
-      img: "https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "LOUNGEWEAR LOVE",
-    },
-    {
-      id: 3,
-      img: "https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-      title: "LIGHT JACKETS",
-    },
-  ];
+export const BuySell = [
+	{
+		id: 1,
+		img: "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+		button: (
+			<NavLink style={{ color: "black" }} to='/shop'>
+				Buy and Sell
+			</NavLink>
+		),
+	},
+];
 
-  export const popularProducts = [
-    {
-      id:1,
-      img:"https://d3o2e4jr3mxnm3.cloudfront.net/Mens-Jake-Guitar-Vintage-Crusher-Tee_68382_1_lg.png",
-    },
-    {
-      id:2,
-      img:"https://cdn.shopify.com/s/files/1/0101/4832/products/Angela_Natural_Tee.png?v=1606780388",
-    },
-    {
-      id:3,
-      img:"https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png",
-    },
-    {
-      id:4,
-      img:"https://www.burdastyle.com/pub/media/catalog/product/cache/7bd3727382ce0a860b68816435d76e26/107/BUS-PAT-BURTE-1320516/1170x1470_BS_2016_05_132_front.png",
-    },
-    {
-      id:5,
-      img:"https://images.ctfassets.net/5gvckmvm9289/3BlDoZxSSjqAvv1jBJP7TH/65f9a95484117730ace42abf64e89572/Noissue-x-Creatsy-Tote-Bag-Mockup-Bundle-_4_-2.png",
-    },
-    {
-      id:6,
-      img:"https://d3o2e4jr3mxnm3.cloudfront.net/Rocket-Vintage-Chill-Cap_66374_1_lg.png",
-    },
-    {
-      id:7,
-      img:"https://www.vintageindustries.nl/download_front/qympzk1762/2217_Arrow_Jacket_Forest.png",
-    },
-    {
-      id:8,
-      img:"https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png",
-    },
-  ]
+export const CarPool = [
+	{
+		id: 1,
+		img: "https://media.istockphoto.com/id/1154420286/photo/man-entering-ride-sharing-car.jpg?s=612x612&w=0&k=20&c=I2kHUNC_Tc0YEtzBgXhN2es_I-4FmGRLaFaQUkDytSM=",
+		button: (
+			<NavLink style={{ color: "black" }} to='/carpool'>
+				Car Pooling
+			</NavLink>
+		),
+	},
+];
+
+export const Recycle = [
+	{
+		id: 1,
+		img: "https://www.nspackaging.com/wp-content/uploads/sites/4/2019/03/shutterstock_1492626947.jpg",
+		button: (
+			<NavLink style={{ color: "black" }} to='/recycle'>
+				Recycle
+			</NavLink>
+		),
+	},
+];
+
+export const popularProducts = [
+	{
+		id: 1,
+		img: "https://d3o2e4jr3mxnm3.cloudfront.net/Mens-Jake-Guitar-Vintage-Crusher-Tee_68382_1_lg.png",
+		title: "H&M",
+		desc: "$10",
+	},
+	{
+		id: 2,
+		img: "https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png",
+		title: "ZARA",
+		desc: "$10.5",
+	},
+	{
+		id: 3,
+		img: "https://d3o2e4jr3mxnm3.cloudfront.net/Mens-Jake-Guitar-Vintage-Crusher-Tee_68382_1_lg.png",
+		title: "NIKE",
+		desc: "$12",
+	},
+	{
+		id: 4,
+		img: "https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png",
+		title: "PARADA",
+		desc: "$20",
+	},
+];
+
+export const AvailableVehicles = [
+	{
+		id: 1,
+		img: "https://media.istockphoto.com/photos/illustration-of-generic-compact-white-car-front-side-view-picture-id1150931120?b=1&k=20&m=1150931120&s=612x612&w=0&h=y9F9VD231jV3hVKDJkOYkzgOpfbIzjk9JYkX8z7Ztpg=",
+		title: "TOYOTA",
+		desc: "Available",
+	},
+	{
+		id: 2,
+		img: "https://media.istockphoto.com/photos/generic-red-suv-on-a-white-background-side-view-picture-id1157655660?b=1&k=20&m=1157655660&s=612x612&w=0&h=ekNZlV17a3wd_yN9PhHXtIabO_zFo4qipCy2AZRpWUI=",
+		title: "HONDA",
+		desc: "Available",
+	},
+	{
+		id: 3,
+		img: "//media.istockphoto.com/photos/illustration-of-generic-compact-white-car-front-side-view-picture-id1150931120?b=1&k=20&m=1150931120&s=612x612&w=0&h=y9F9VD231jV3hVKDJkOYkzgOpfbIzjk9JYkX8z7Ztpg=",
+		title: "MAHINDRA",
+		desc: "Available",
+	},
+	{
+		id: 4,
+		img: "https://media.istockphoto.com/photos/generic-red-suv-on-a-white-background-side-view-picture-id1157655660?b=1&k=20&m=1157655660&s=612x612&w=0&h=ekNZlV17a3wd_yN9PhHXtIabO_zFo4qipCy2AZRpWUI=",
+		title: "BMW",
+		desc: "Available",
+	},
+];
+
+export const recycledProducts = [
+	{
+		id: 1,
+		img: "https://d3o2e4jr3mxnm3.cloudfront.net/Mens-Jake-Guitar-Vintage-Crusher-Tee_68382_1_lg.png",
+		title: "Biodegradable",
+	},
+	{
+		id: 2,
+		img: "https://d3o2e4jr3mxnm3.cloudfront.net/Mens-Jake-Guitar-Vintage-Crusher-Tee_68382_1_lg.png",
+		title: "Non-Biodegradable",
+	},
+	{
+		id: 3,
+		img: "https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png",
+		title: "Biodegradable",
+	},
+	{
+		id: 4,
+		img: "https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png",
+		title: "Non-Biodegradable",
+	},
+];

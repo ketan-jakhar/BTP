@@ -13,7 +13,7 @@ exports.createUserSchema = (0, zod_1.object)({
             required_error: 'Email address is required',
         })
             .email('Invalid email address')
-            .endsWith('lnmiit.ac.in', 'Please use your lnmiit email address'),
+            .endsWith('@lnmiit.ac.in', 'Please use your lnmiit email address'),
         password: (0, zod_1.string)({
             required_error: 'Password is required',
         })
@@ -52,18 +52,22 @@ exports.loginUserSchema = (0, zod_1.object)({
 });
 exports.updateUserSchema = (0, zod_1.object)({
     body: (0, zod_1.object)({
-        name: (0, zod_1.string)({
-            invalid_type_error: 'Please enter a valid name',
+        payload: (0, zod_1.object)({
+            name: (0, zod_1.string)({
+                invalid_type_error: 'Please enter a valid name',
+            }),
+            email: (0, zod_1.string)({
+                invalid_type_error: 'Please enter a valid email',
+            })
+                .email('Invalid email address')
+                .endsWith('@lnmiit.ac.in', 'Please use your lnmiit email address'),
+            contact_number: (0, zod_1.number)({
+                invalid_type_error: 'Please enter a valid contact number',
+            })
+                .int('Contact number must be an integer')
+                .positive('Contact number must be a positive number')
+                .min(1000000000, 'Please enter a valid contact number')
+                .max(9999999999, 'Please enter a valid contact number'),
         }),
-        email: (0, zod_1.string)()
-            .email('Invalid email address')
-            .endsWith('@lnmiit.ac.in', 'Please use your lnmiit email address'),
-        contact_number: (0, zod_1.number)({
-            invalid_type_error: 'Please enter a valid contact number',
-        })
-            .int('Contact number must be an integer')
-            .positive('Contact number must be a positive number')
-            .min(1000000000, 'Please enter a valid contact number')
-            .max(9999999999, 'Please enter a valid contact number'),
     }),
 });

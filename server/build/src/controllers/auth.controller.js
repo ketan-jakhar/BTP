@@ -42,10 +42,15 @@ const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { name, password, contact_number, } = req.body;
         let { email } = req.body;
-        // 1. Check if the user already exist
-        const checkUser = yield (0, services_1.findUserByEmail)({ email });
-        if (checkUser)
+        // 1. Search if the user already exist
+        const searchUserByEmail = yield (0, services_1.findUserByEmail)({ email });
+        if (searchUserByEmail)
             return next(new utils_1.AppError(400, 'User with that email already exist'));
+        const searchUserByContactNumber = yield (0, services_1.findUserByContactNumber)({
+            contact_number,
+        });
+        if (searchUserByContactNumber)
+            return next(new utils_1.AppError(400, 'User with that contact number already exist'));
         // 2. Hash the password
         const salt = yield bcryptjs_1.default.genSalt(10); // generate salt
         const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
@@ -67,11 +72,7 @@ const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     catch (err) {
         console.log('Error: (auth.controller -> register)', err);
         if (err.code === '23505') {
-            // return res.status(400).json({
-            //   status: 'error',
-            //   message: 'User with that email already exist',
-            // });
-            return next(new utils_1.AppError(400, 'User with that email already exist'));
+            return next(new utils_1.AppError(400, 'User with that email or contact number already exist'));
         }
         if (err instanceof Error)
             return next(new utils_1.AppError(res.statusCode, err.message));
@@ -118,10 +119,14 @@ const loginHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         res.cookie('refresh_token', refresh_token, utils_1.refreshTokenCookieOptions);
         res.cookie('logged_in', true, Object.assign(Object.assign({}, utils_1.accessTokenCookieOptions), { httpOnly: false }));
         console.log('Res.cookie: (auth.controller -> login)', res.cookie);
-        // 4. Send response
+        // 4. Update last_login_at
+        user.last_login_at = new Date();
+        user.save();
+        // 5. Send response
         res.status(200).json({
             status: 'success',
             access_token,
+            last_login_at: user.last_login_at,
         });
     }
     catch (err) {
