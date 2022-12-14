@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserById = exports.findUserByEmail = exports.createUser = exports.UserService = void 0;
+exports.findUserByContactNumber = exports.findUserById = exports.findUserByEmail = exports.createUser = exports.UserService = void 0;
 const _1 = require(".");
 const utils_1 = require("../utils");
 const entities_1 = require("../types/entities");
@@ -32,3 +32,5 @@ const findUserByEmail = ({ email, }) => __awaiter(void 0, void 0, void 0, functi
 exports.findUserByEmail = findUserByEmail;
 const findUserById = ({ id, }) => __awaiter(void 0, void 0, void 0, function* () { return yield userRepository.findOneBy({ id }); });
 exports.findUserById = findUserById;
+const findUserByContactNumber = ({ contact_number, }) => __awaiter(void 0, void 0, void 0, function* () { return yield userRepository.findOneBy({ contact_number }); });
+exports.findUserByContactNumber = findUserByContactNumber;

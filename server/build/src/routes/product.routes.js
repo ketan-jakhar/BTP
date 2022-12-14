@@ -17,7 +17,9 @@ router.get('/:id', middlewares_1.deserializeUser, middlewares_1.requireUser, con
 // POST /shop/create
 router.post('/create', middlewares_1.deserializeUser, middlewares_1.requireUser, (0, utils_1.validate)(schemas_1.createProductSchema), controllers_1.createProduct);
 // PUT /shop/:id/update
-router.put('/:id/update', middlewares_1.deserializeUser, middlewares_1.requireUser, (0, utils_1.validate)(schemas_1.updateProductSchema), controllers_1.updateProduct);
+router.put('/:id/update', middlewares_1.deserializeUser, middlewares_1.requireUser, 
+// validate(updateProductSchema),
+controllers_1.updateProduct);
 //DELETE /shop/:id/delete
 router.delete('/:id/delete', middlewares_1.deserializeUser, middlewares_1.requireUser, controllers_1.deleteProduct);
 // GET /shop/cart

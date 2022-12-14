@@ -88,6 +88,12 @@ exports.createProduct = createProduct;
 const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        const user_id = res.locals.user.id;
+        const product = yield (0, services_1.findProductById)({ id });
+        if (!product)
+            return next(new utils_1.AppError(404, 'Product not found'));
+        if (product.user_id !== user_id)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
         const { payload } = req.body;
         const productService = new services_1.ProductService();
         const updatedProduct = yield productService.updateResource(id, payload);
@@ -109,6 +115,12 @@ exports.updateProduct = updateProduct;
 const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        const user_id = res.locals.user.id;
+        const product = yield (0, services_1.findProductById)({ id });
+        if (!product)
+            return next(new utils_1.AppError(404, 'Product not found'));
+        if (product.user_id !== user_id)
+            return next(new utils_1.AppError(401, 'Unauthorized'));
         const productService = new services_1.ProductService();
         const deletedProduct = yield productService.deleteResource(id);
         res.status(200).json({

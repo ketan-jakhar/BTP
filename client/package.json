@@ -1,5 +1,5 @@
 {
-	"name": "client",
+	"name": "new",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -8,12 +8,16 @@
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.1.0",
 		"@testing-library/user-event": "^12.1.10",
+		"axios": "^1.2.1",
 		"react": "^17.0.2",
+		"react-cookie": "^4.1.1",
 		"react-dom": "^17.0.2",
-		"react-scripts": "4.0.3",
+		"react-router-dom": "^6.4.5",
+		"react-scripts": "^5.0.1",
 		"styled-components": "^5.3.1",
 		"web-vitals": "^1.0.1"
 	},
+	"proxy": "http://localhost:4000",
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
@@ -37,5 +41,17 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"main": "index.js",
+	"license": "MIT",
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.46.0",
+		"eslint": "^8.29.0",
+		"eslint-config-standard-with-typescript": "^23.0.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-n": "^15.6.0",
+		"eslint-plugin-promise": "^6.1.1",
+		"eslint-plugin-react": "^7.31.11",
+		"typescript": "^4.9.4"
 	}
 }

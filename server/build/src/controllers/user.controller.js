@@ -14,7 +14,7 @@ require('dotenv').config;
 const services_1 = require("../services");
 const enums_1 = require("../types/enums");
 const utils_1 = require("../utils");
-// Get user by id
+// Get user profile (self)
 const getProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = res.locals.user;
@@ -41,8 +41,10 @@ exports.getProfile = getProfile;
 // Update user profile
 const updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log('REQ BODY - \n', req.body);
         const { payload } = req.body;
         const { id } = res.locals.user;
+        console.log('PAYLOAD - \n', payload);
         if (!id)
             return next(new utils_1.AppError(400, 'User not found'));
         const userService = new services_1.UserService();

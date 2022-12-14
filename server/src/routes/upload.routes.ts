@@ -1,5 +1,4 @@
 import express, { Request } from 'express';
-import { homeHandler, uploadImageHandler } from '../controllers';
 const multer = require('multer');
 const router = express.Router();
 
@@ -27,8 +26,6 @@ const upload = multer({
   fileFilter,
 });
 
-router.put('/:id/upload-image', upload.single('imgfile'), uploadImageHandler);
-
-router.get('/home', homeHandler);
+router.put('/upload-image', upload.single('imgfile'), uploadImageHandler);
 
 export default router;

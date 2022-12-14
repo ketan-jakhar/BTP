@@ -60,6 +60,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Carpool.prototype, "rider_count", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: false }),
+    __metadata("design:type", Number)
+], Carpool.prototype, "publisher_rider_count", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: false }),
     __metadata("design:type", String)
 ], Carpool.prototype, "destination", void 0);
@@ -67,6 +71,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: false }),
     __metadata("design:type", String)
 ], Carpool.prototype, "source", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Carpool.prototype, "mapping", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'boolean',

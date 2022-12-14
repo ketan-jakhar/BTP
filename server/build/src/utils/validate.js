@@ -12,12 +12,13 @@ const validate = (schema) => (req, res, next) => {
         next();
     }
     catch (error) {
+        console.log('Error: (utils -> validate)', error);
         if (error instanceof zod_1.ZodError) {
             return res.status(400).json({
                 status: 'error',
-                'error name': error.name,
-                'error message': error.issues[0].message,
-                'error code': error.issues[0].code,
+                error_name: error.name,
+                message: error.issues[0].message,
+                error_code: error.issues[0].code,
             });
         }
         next(error);

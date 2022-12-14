@@ -38,6 +38,9 @@ export class Recycle extends BaseResource {
   @Column({ type: 'text', nullable: true })
   remarks?: string;
 
+  @Column({ type: 'text', nullable: true })
+  img_url?: string | null;
+
   @Column({
     type: 'boolean',
     nullable: true,
