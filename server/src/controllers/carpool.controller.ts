@@ -202,7 +202,7 @@ export const joinCarpool = async (
       return false;
     };
 
-    if (carpool.user_id === null || carpool.user_id === undefined) {
+    if (!carpool.user_id) {
       if (carpool.rider_count < carpool.capacity) carpool.rider_count++;
       else return next(new AppError(400, 'Carpool maximum capacity reached'));
       // carpool.user_id = [bookingUser];

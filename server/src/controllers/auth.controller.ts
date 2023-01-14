@@ -27,26 +27,6 @@ import { User } from '../types/entities';
 import { JwtPayload } from 'jsonwebtoken';
 import { ObjectLiteral } from 'typeorm';
 
-// GET /REGISTER
-export const getRegisterHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    return res.status(200).json({
-      status: 'success',
-      data: null,
-      message: 'Page loaded successfully',
-    });
-  } catch (err) {
-    console.log('Error: (auth.controller -> getRegister)', err);
-    if (err instanceof Error)
-      return next(new AppError(res.statusCode, err.message));
-    else return next(new AppError(400, 'Something went Wrong'));
-  }
-};
-
 // POST /REGISTER
 export const registerHandler = async (
   req: Request<{}, {}, CreateUserInput>,
@@ -103,26 +83,6 @@ export const registerHandler = async (
         )
       );
     }
-    if (err instanceof Error)
-      return next(new AppError(res.statusCode, err.message));
-    else return next(new AppError(400, 'Something went Wrong'));
-  }
-};
-
-// GET /LOGIN
-export const getLoginHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    return res.status(200).json({
-      status: 'success',
-      data: null,
-      message: 'Page loaded successfully',
-    });
-  } catch (err: any) {
-    console.log('Error: (auth.controller -> getLogin)', err);
     if (err instanceof Error)
       return next(new AppError(res.statusCode, err.message));
     else return next(new AppError(400, 'Something went Wrong'));
@@ -319,15 +279,17 @@ export const forgotPasswordHandler = async (
     console.log('url: (userController -> createUserHandler)', url);
 
     // Email Payload
-    const emailTo: string = '19ucc020@lnmiit.ac.in';
-    const message: string = `Hello ${
-      !!user.name ? user.name : 'User'
-    },\nPlease click on the link below to change your password.\n${url}\nRegards,\nTeam GoodFind`;
-    const subject: string = `Reset Password - GoodFind`;
-    const emailFrom: string = 'ketanjakhar29@gmail.com';
+    const email = {
+      to: user.email,
+      from: config.get<string>('sendgridSender'),
+      subject: `Reset Password - GoodFind`,
+      message: `Hello ${
+        !!user.name ? user.name : 'User'
+      },\nPlease click on the link below to change your password.\n${url}\nRegards,\nTeam GoodFind`,
+    };
 
     // Send Email
-    sendEmail(emailTo, emailFrom, subject, message);
+    sendEmail(email.to, email.from, email.subject, email.message);
 
     return res.status(200).json({
       status: 'success',

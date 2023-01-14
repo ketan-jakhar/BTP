@@ -1,8 +1,6 @@
 import express from 'express';
 import {
-  getRegisterHandler,
   registerHandler,
-  getLoginHandler,
   loginHandler,
   logoutHandler,
   refreshAccessTokenHandler,
@@ -18,17 +16,9 @@ import {
 import { validate } from '../utils';
 const router = express.Router();
 
-// GET Register user
-// GET /api/auth/register
-router.get('/register', getRegisterHandler);
-
 // POST Register user
 // POST /api/auth/register
 router.post('/register', validate(createUserSchema), registerHandler);
-
-// GET Login user
-// GET /api/auth/login
-router.get('/login', getLoginHandler);
 
 // POST Login user
 // POST /api/auth/login
