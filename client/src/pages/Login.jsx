@@ -1,5 +1,8 @@
+import React, { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
 	width: 100vw;
@@ -66,16 +69,62 @@ const Link = styled.a`
 	cursor: pointer;
 	color: navy;
 `;
+const Error = styled.div`
+	color: red;
+	font-size: 14px;
+	padding: 10px;
+`;
 
 const Login = () => {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+	const navigate = useNavigate();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await axios.post(
+				"http://localhost:4000/api/auth/login",
+				{
+					email,
+					password,
+				}
+			);
+			localStorage.setItem("token", response.data.access_token);
+			console.log(response);
+			if (response.data.status === "success") {
+				navigate("/");
+			} else {
+				setError({ email: response.data.message });
+			}
+		} catch (err) {
+			console.log(err);
+			// setError(err.response.data.message);
+		}
+	};
+
 	return (
 		<Container>
 			<Wrapper>
 				<Title>SIGN IN</Title>
-				<Form>
-					<Input placeholder='email' type='email' required />
-					<Input placeholder='password' type='password' required />
-					<Button type='submit'>LOGIN</Button>
+				<Form onSubmit={(e) => handleSubmit(e)}>
+					<Input
+						type='email'
+						placeholder='Email'
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+					/>
+					<Input
+						type='password'
+						placeholder='Password'
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+					/>
+					<Button type='submit'>Login</Button>
+					{error && <Error>{error}</Error>}
 					<Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
 					<Link>CREATE A NEW ACCOUNT</Link>
 				</Form>

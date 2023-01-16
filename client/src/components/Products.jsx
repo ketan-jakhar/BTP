@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import { popularProducts } from "../data";
-import Product from "./Product";
+// import Product from "./Product";
 import axios from "axios";
+import ProductList from "./Product";
 
 const Container = styled.div`
 	padding: 20px;
@@ -47,17 +48,8 @@ const Products = () => {
 	// 		});
 	// }, []);
 	return (
-    <Container>
-      
-			{popularProducts.map((item, index) => (
-				<Wrapper>
-					<Product item={item} key={item.id} />
-					<InfoContainer>
-						<Title>{item.title}</Title>
-						<Desc>{item.desc}</Desc>
-					</InfoContainer>
-				</Wrapper>
-			))}
+		<Container>
+			<ProductList />
 		</Container>
 	);
 };

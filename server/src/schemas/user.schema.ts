@@ -30,7 +30,7 @@ export const createUserSchema = object({
       .max(9999999999, 'Please enter a valid contact number'),
     role: z.optional(z.nativeEnum(UserRole)),
   }).refine(data => data.password === data.password_confirm, {
-    path: ['passwordConfirm'],
+    path: ['password_confirm'],
     message: 'Passwords do not match',
   }),
 });

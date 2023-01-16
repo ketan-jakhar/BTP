@@ -3,7 +3,8 @@ import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
 	height: 60px;
@@ -72,6 +73,20 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
+	const isLoggedIn = localStorage.getItem("token");
+
+	const navigate = useNavigate();
+	const handleLogout = async (e) => {
+		// e.preventDefault();
+		try {
+			await axios.get("http://localhost:4000/api/auth/logout");
+			localStorage.removeItem("token");
+			navigate("/");
+			// redirect to login or home page
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return (
 		<Container>
 			<Wrapper>
@@ -88,16 +103,32 @@ const Navbar = () => {
 					</NavLink>
 				</Center>
 				<Right>
-					<MenuItem>
-						<NavLink style={{ color: "black" }} to='/Register'>
-							REGISTER
-						</NavLink>
-					</MenuItem>
-					<MenuItem>
-						<NavLink style={{ color: "black" }} to='/Login'>
-							SIGN IN
-						</NavLink>
-					</MenuItem>
+					{!isLoggedIn && (
+						<>
+							<MenuItem>
+								<NavLink style={{ color: "black" }} to='/Register'>
+									REGISTER
+								</NavLink>
+							</MenuItem>
+							<MenuItem>
+								<NavLink style={{ color: "black" }} to='/Login'>
+									SIGN IN
+								</NavLink>
+							</MenuItem>
+						</>
+					)}
+
+					{isLoggedIn && (
+						<MenuItem>
+							<NavLink
+								style={{ color: "black" }}
+								onClick={(e) => handleLogout(e)}
+							>
+								LOGOUT
+							</NavLink>
+						</MenuItem>
+					)}
+
 					<MenuItem>
 						<NavLink style={{ color: "black" }} to='/Cart'>
 							<Badge color='primary'>

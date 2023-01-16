@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import axios from "axios";
@@ -68,79 +68,122 @@ const Button = styled.button`
 `;
 
 const Register = () => {
-	function handleRegister(e) {
-		console.log("c");
-		e.preventDefault();
-		const form = e.target;
-		// console.log("form: ", form[0].value);
-		const body = {
-			name: form[0].value,
-			contact_number: parseInt(form[1].value),
-			password: form[2].value,
-			password_confirm: form[3].value,
-			email: form[4].value,
-		};
-		console.log(body);
+	const [name, setName] = useState("");
+	const [contactNumber, setContactNumber] = useState("");
+	const [password, setPassword] = useState("");
+	const [passwordConfirm, setPasswordConfirm] = useState("");
 
-		axios
-			.post("http://localhost:4000/api/auth/register", body)
-			.then((response) => {
-				console.log("res.data: ", response.data);
-				if (response.data.status === "success") {
-					console.log("z");
-					<Navigate to='http://localhost:3000/login' />;
-				} else {
-					console.log("e");
-					<Navigate to='http://localhost:3000/login' />;
-				}
-			})
-			.catch((e) => console.error(e));
+	const [email, setEmail] = useState("");
+	const [errors, setErrors] = useState({
+		name: "",
+		contactNumber: "",
+		password: "",
+		passwordConfirm: "",
+		email: "",
+	});
+	const navigate = useNavigate();
+
+	function validate() {
+		let isValid = true;
+		const errorMessages = {
+			name: "",
+			contactNumber: "",
+			password: "",
+			passwordConfirm: "",
+			email: "",
+		};
+
+		if (!name) {
+			isValid = false;
+			errorMessages.name = "Name is required";
+		}
+		if (!contactNumber) {
+			isValid = false;
+			errorMessages.contactNumber = "Contact Number is required";
+		}
+		if (!password) {
+			isValid = false;
+			errorMessages.password = "Password is required";
+		}
+		if (!passwordConfirm) {
+			isValid = false;
+			errorMessages.passwordConfirm = "Confirm Password is required";
+		}
+		if (!email) {
+			isValid = false;
+			errorMessages.email = "Email is required";
+		}
+
+		setErrors(errorMessages);
+		return isValid;
 	}
 
-	useEffect(() => {
-		axios
-			.get("http://localhost:3000/register")
-			.then((response) => {
-				console.log("res.data: ", response.data);
-				if (response.data.status === "success") {
-					console.log("s");
-					<Navigate to='http://localhost:3000/login' />;
-				} else {
-					console.log("l");
-					<Navigate to='http://localhost:3000/login' />;
-				}
-			})
-			.catch((e) => console.error(e));
-	}, []);
-	// const [name, setName] = useState("");
+	async function handleSubmit(e) {
+		e.preventDefault();
+		if (!validate()) {
+			return;
+		}
+		try {
+			const body = {
+				name,
+				contact_number: parseInt(contactNumber),
+				password,
+				password_confirm: passwordConfirm,
+				email,
+			};
+			const response = await axios.post(
+				"http://localhost:4000/api/auth/register",
+				body
+			);
+			if (response.data.status === "success") {
+				navigate("/login");
+			} else {
+				setErrors({ email: response.data.message });
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-	// async function logout() {
-	// 	localStorage.removeItem("access-token");
-	// }
-	// window.addEventListener("beforeunload", (e) => {
-	// 	e.preventDefault();
-	// 	cookies.remove("access_token");
-	// 	cookies.remove("refresh_token");
-	// 	cookies.remove("logged_in");
-	// });
-
-	// React.useEffect(() => {
-	// 	axios.get(`${baseURL}/1`).then((response) => {
-	// 		setPost(response.data);
-	// 	});
-	// }, []);
 	return (
 		<Container>
 			<Wrapper>
 				<Title>CREATE AN ACCOUNT</Title>
-				<Form onSubmit={(e) => handleRegister(e)}>
-					<Input placeholder='Name' type='text' />
-					<Input placeholder='Contact Number' type='number' />
-					<Input placeholder='Password' type='password' />
-					<Input placeholder='Password Confirm' type='password' />
+				<Form onSubmit={(e) => handleSubmit(e)}>
 					<Input
-						placeholder='Email Address (LNMIIT email id only)'
+						type='text'
+						placeholder='Name'
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						error={errors.name}
+					/>
+					<Input
+						type='text'
+						placeholder='Contact Number'
+						value={contactNumber}
+						onChange={(e) => setContactNumber(e.target.value)}
+						error={errors.contactNumber}
+					/>
+					<Input
+						type='password'
+						placeholder='Password'
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						error={errors.password}
+					/>
+					<Input
+						type='password'
+						placeholder='Confirm Password'
+						value={passwordConfirm}
+						onChange={(e) => setPasswordConfirm(e.target.value)}
+						error={errors.passwordConfirm}
+					/>
+					<Input
 						type='email'
+						placeholder='Email'
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						error={errors.email}
 					/>
 					<Agreement>
 						By creating an account, I consent to the processing of my personal

@@ -1,87 +1,56 @@
-import { SearchOutlined, ShoppingCartOutlined } from "@material-ui/icons";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 
-const Info = styled.div`
-	opacity: 0;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.2);
-	z-index: 3;
+const ProductContainer = styled.div`
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.5s ease;
-	cursor: pointer;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 20px 0;
 `;
 
-const Container = styled.div`
-	flex: 1;
-	margin: 5px;
-	min-width: 280px;
-	height: 350px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background-color: #f5fbfd;
-	position: relative;
-
-	&:hover ${Info} {
-		opacity: 1;
-	}
+const ProductCard = styled.div`
+	width: 30%;
+	margin-bottom: 20px;
+	padding: 20px;
+	box-shadow: 0px 0px 10px #ccc;
+	border-radius: 10px;
+	text-align: center;
 `;
 
-const Circle = styled.div`
-	width: 200px;
-	height: 200px;
+const ProductImage = styled.img`
+	max-width: 100%;
+	margin-bottom: 20px;
 	border-radius: 50%;
-	background-color: white;
-	position: absolute;
 `;
 
-const Image = styled.img`
-	height: 75%;
-	z-index: 2;
-`;
+const ProductList = () => {
+	const [products, setProducts] = useState([]);
 
-const Icon = styled.div`
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	background-color: white;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 10px;
-	transition: all 0.5s ease;
-	&:hover {
-		background-color: #e9f5f5;
-		transform: scale(1.1);
-	}
-`;
+	useEffect(() => {
+		axios
+			.get("/shop/all")
+			.then((res) => {
+				setProducts(res.data.products);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
 
-const Product = ({ item }) => {
 	return (
-		<Container>
-			<Circle />
-			<Image src={item.img} />
-			<Info>
-				<Icon>
-					<NavLink style={{ color: "black" }} to='/cart'>
-						<ShoppingCartOutlined />
-					</NavLink>
-				</Icon>
-				<Icon>
-					<NavLink style={{ color: "black" }} to='/Ppoduct'>
-						<SearchOutlined />
-					</NavLink>
-				</Icon>
-			</Info>
-		</Container>
+		<ProductContainer>
+			{products.map((product) => (
+				<ProductCard key={product.id}>
+					<ProductImage src={product.image} alt={product.name} />
+					<h3>{product.name}</h3>
+					<p>{product.description}</p>
+					<p>Price: {product.price}</p>
+					<button>Add to Cart</button>
+				</ProductCard>
+			))}
+		</ProductContainer>
 	);
 };
 
-export default Product;
+export default ProductList;
