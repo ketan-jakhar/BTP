@@ -1,4 +1,5 @@
 import express, { Request } from 'express';
+import { uploadImageHandler } from '../controllers';
 const multer = require('multer');
 const router = express.Router();
 

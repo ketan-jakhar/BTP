@@ -11,6 +11,7 @@ import {
   ProductRoutes,
   RecycleRoutes,
   MiscRoutes,
+  AdminRoutes,
 } from './routes';
 import { AppError, validateEnv, AppDataSource } from './utils';
 
@@ -37,7 +38,13 @@ AppDataSource.initialize()
     app.use(cookieParser());
 
     // 4. Cors
-    app.use(cors());
+    app.use(
+      cors({
+        origin: '*',
+
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      })
+    );
 
     // ROUTES
     app.use('/api/auth', AuthRoutes);
@@ -46,6 +53,7 @@ AppDataSource.initialize()
     app.use('/api/shop', ProductRoutes);
     app.use('/api/recycle', RecycleRoutes);
     app.use('/api', MiscRoutes);
+    app.use('/api/admin', AdminRoutes);
 
     // UNHANDLED ROUTE
     app.all('*', (req: Request, res: Response, next: NextFunction) => {

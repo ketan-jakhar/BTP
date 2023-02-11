@@ -1,6 +1,7 @@
+import React, { useEffect } from "react";
+
 import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -76,17 +77,33 @@ const Navbar = () => {
 	const isLoggedIn = localStorage.getItem("token");
 
 	const navigate = useNavigate();
+	// const handleLogout = async (e) => {
+	// 	// e.preventDefault();
+	// 	try {
+	// 		await axios.get("http://localhost:4000/api/auth/logout");
+	// 		localStorage.removeItem("token");
+	// 		navigate("/");
+	// 		// redirect to login or home page
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 	}
+	// };
+
 	const handleLogout = async (e) => {
-		// e.preventDefault();
+		console.log("handleLogout called");
 		try {
 			await axios.get("http://localhost:4000/api/auth/logout");
+			console.log("Logout successful");
 			localStorage.removeItem("token");
+			document.cookie = "access_token=; max-age=0; path=/;";
+			document.cookie = "logged_in=; max-age=0; path=/;";
+			document.cookie = "refresh_token=; max-age=0; path=/;";
 			navigate("/");
-			// redirect to login or home page
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	};
+
 	return (
 		<Container>
 			<Wrapper>
@@ -99,7 +116,7 @@ const Navbar = () => {
 				</Left>
 				<Center>
 					<NavLink style={{ color: "black" }} to='/'>
-						<Logo>LNMshop</Logo>
+						<Logo>Good Find</Logo>
 					</NavLink>
 				</Center>
 				<Right>

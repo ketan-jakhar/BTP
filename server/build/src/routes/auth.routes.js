@@ -9,15 +9,9 @@ const middlewares_1 = require("../middlewares");
 const schemas_1 = require("../schemas");
 const utils_1 = require("../utils");
 const router = express_1.default.Router();
-// GET Register user
-// GET /api/auth/register
-router.get('/register', controllers_1.getRegisterHandler);
 // POST Register user
 // POST /api/auth/register
 router.post('/register', (0, utils_1.validate)(schemas_1.createUserSchema), controllers_1.registerHandler);
-// GET Login user
-// GET /api/auth/login
-router.get('/login', controllers_1.getLoginHandler);
 // POST Login user
 // POST /api/auth/login
 router.post('/login', (0, utils_1.validate)(schemas_1.loginUserSchema), controllers_1.loginHandler);

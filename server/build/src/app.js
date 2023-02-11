@@ -37,7 +37,10 @@ utils_1.AppDataSource.initialize()
     // 3. Cookie Parser
     app.use((0, cookie_parser_1.default)());
     // 4. Cors
-    app.use((0, cors_1.default)());
+    app.use((0, cors_1.default)({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    }));
     // ROUTES
     app.use('/api/auth', routes_1.AuthRoutes);
     app.use('/api/user', routes_1.UserRoutes);
@@ -45,6 +48,7 @@ utils_1.AppDataSource.initialize()
     app.use('/api/shop', routes_1.ProductRoutes);
     app.use('/api/recycle', routes_1.RecycleRoutes);
     app.use('/api', routes_1.MiscRoutes);
+    app.use('/api/admin', routes_1.AdminRoutes);
     // UNHANDLED ROUTE
     app.all('*', (req, res, next) => {
         next(new utils_1.AppError(404, `Route ${req.originalUrl} not found`));

@@ -17,6 +17,8 @@ const utils_1 = require("../utils");
 // recent recycles from here only
 const getAllRecycleHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // const { params } = req.body;
+        req.body.params = JSON.parse(JSON.stringify({}));
         const { params } = req.body;
         const recycleService = new services_1.RecycleService();
         let recycles;

@@ -8,7 +8,10 @@ const Logout = () => {
 		// e.preventDefault();
 		try {
 			await axios.get("http://localhost:4000/api/auth/logout");
-			localStorage.removeItem("isLoggedIn");
+			localStorage.removeItem("token");
+			document.cookie = "access_token=; max-age=0; path=/;";
+			document.cookie = "logged_in=; max-age=0; path=/;";
+			document.cookie = "refresh_token=; max-age=0; path=/;";
 			navigate("/");
 			// redirect to login or home page
 		} catch (err) {

@@ -32,7 +32,7 @@ exports.createUserSchema = (0, zod_1.object)({
             .max(9999999999, 'Please enter a valid contact number'),
         role: zod_1.z.optional(zod_1.z.nativeEnum(enums_1.UserRole)),
     }).refine(data => data.password === data.password_confirm, {
-        path: ['passwordConfirm'],
+        path: ['password_confirm'],
         message: 'Passwords do not match',
     }),
 });

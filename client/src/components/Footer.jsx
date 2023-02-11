@@ -80,72 +80,78 @@ const ContactItem = styled.div`
 	align-items: center;
 `;
 
-const Payment = styled.img`
-	width: 50%;
+const FooterBanner = styled.div`
+	width: 100%;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
 `;
 
 const Footer = () => {
 	return (
-		<Container>
-			<Left>
-				<Logo>LNMshop</Logo>
-				<Desc>LNMshop (GoodFind) - Buy, Sell, Ride, Recycle</Desc>
-				<SocialContainer>
-					<SocialIcon color='3B5999'>
-						<Facebook />
-					</SocialIcon>
-					<SocialIcon color='E4405F'>
-						<Instagram />
-					</SocialIcon>
-					<SocialIcon color='55ACEE'>
-						<Twitter />
-					</SocialIcon>
-					<SocialIcon color='E60023'>
-						<Pinterest />
-					</SocialIcon>
-				</SocialContainer>
-			</Left>
-			<Center>
-				<Title>Links</Title>
-				<List>
-					<ListItem>
-						<Link style={{ color: "black" }} to='/'>
-							Home
-						</Link>
-					</ListItem>
-					<ListItem>
-						<Link style={{ color: "black" }} to='/Cart'>
-							Cart
-						</Link>
-					</ListItem>
-					<ListItem>
-						<Link style={{ color: "black" }} to='/CarPool'>
-							CarPooling
-						</Link>
-					</ListItem>
-					<ListItem>
-						<Link style={{ color: "black" }} to='/BuySell'>
-							Buy&Sell
-						</Link>
-					</ListItem>
-				</List>
-			</Center>
-			<Right>
-				<Title>Contact</Title>
-				<ContactItem>
-					<Room style={{ marginRight: "10px" }} /> LNMIIT, Rupa ki Nangal,
-					Post-Sumel, via-Jamdoli, Jaipur-302031, (Rajasthan) INDIA
-				</ContactItem>
-				<ContactItem>
-					<Phone style={{ marginRight: "10px" }} /> 0141 518 9211
-				</ContactItem>
-				<ContactItem>
-					<MailOutline style={{ marginRight: "10px" }} />{" "}
-					info.lnmiit@lnmiit.ac.in
-				</ContactItem>
-				<Payment src='https://i.ibb.co/Qfvn4z6/payment.png' />
-			</Right>
-		</Container>
+		<>
+			<Container>
+				<Left>
+					<Logo>Good Find</Logo>
+					<Desc>Good Find (GoodFind) - Buy, Sell, Ride, Recycle</Desc>
+					<SocialContainer>
+						<SocialIcon color='3B5999'>
+							<Facebook />
+						</SocialIcon>
+						<SocialIcon color='E4405F'>
+							<Instagram />
+						</SocialIcon>
+						<SocialIcon color='55ACEE'>
+							<Twitter />
+						</SocialIcon>
+						<SocialIcon color='E60023'>
+							<Pinterest />
+						</SocialIcon>
+					</SocialContainer>
+				</Left>
+				<Center>
+					<Title>Links</Title>
+					<List>
+						<ListItem>
+							<Link style={{ color: "black" }} to='/'>
+								Home
+							</Link>
+						</ListItem>
+						<ListItem>
+							<Link style={{ color: "black" }} to='/Cart'>
+								Cart
+							</Link>
+						</ListItem>
+						<ListItem>
+							<Link style={{ color: "black" }} to='/CarPool'>
+								CarPooling
+							</Link>
+						</ListItem>
+						<ListItem>
+							<Link style={{ color: "black" }} to='/Product'>
+								Buy&Sell
+							</Link>
+						</ListItem>
+					</List>
+				</Center>
+				<Right>
+					<Title>Contact</Title>
+					<ContactItem>
+						<Room style={{ marginRight: "10px" }} /> LNMIIT, Rupa ki Nangal,
+						Post-Sumel, via-Jamdoli, Jaipur-302031, (Rajasthan) INDIA
+					</ContactItem>
+					<ContactItem>
+						<Phone style={{ marginRight: "10px" }} /> 0141 518 9211
+					</ContactItem>
+					<ContactItem>
+						<MailOutline style={{ marginRight: "10px" }} />{" "}
+						info.lnmiit@lnmiit.ac.in
+					</ContactItem>
+				</Right>
+			</Container>
+			<hr />
+			<FooterBanner> Made with ♥ at LNMIIT</FooterBanner>
+		</>
 	);
 };
 

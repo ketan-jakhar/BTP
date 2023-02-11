@@ -10,6 +10,7 @@ const Container = styled.div``;
 
 const Title = styled.h1`
 	margin: 20px;
+	text-align: center;
 `;
 
 const FilterContainer = styled.div`
@@ -34,22 +35,34 @@ const Select = styled.select`
 	margin-right: 20px;
 	${mobile({ margin: "10px 0px" })}
 `;
+
+const H2 = styled.h2`
+	margin: 20px;
+	text-align: center;
+`;
+
+const Button = styled.button`
+	width: 100%;
+	border: none;
+	padding: 15px 20px;
+	background-color: teal;
+	color: white;
+	cursor: pointer;
+	border-radius: 15px;
+	margin: 10px auto;
+`;
 const Option = styled.option``;
 
-const ProductList = () => {
+const CarpoolList = () => {
 	return (
 		<Container>
-			<Navbar />
-			<Announcement />
+			<Navbar /> <hr />
 			<Title>Available Carpools</Title>
-			<h2>
-				<tab>Choose your destination</tab>
-			</h2>
+			<Button>Create a Carpool</Button>
 			<Vehicles />
-			<Newsletter />
-			<Footer />
+			<hr /> <Footer />
 		</Container>
 	);
 };
 
-export default ProductList;
+export default CarpoolList;

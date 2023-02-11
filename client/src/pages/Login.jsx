@@ -92,8 +92,13 @@ const Login = () => {
 				}
 			);
 			localStorage.setItem("token", response.data.access_token);
+
 			console.log(response);
 			if (response.data.status === "success") {
+				document.cookie = "access_token=" + response.data.access_token;
+				document.cookie = "logged_in=" + response.data.logged_in;
+				document.cookie = "refresh_token=" + response.data.refresh_token;
+
 				navigate("/");
 			} else {
 				setError({ email: response.data.message });
@@ -125,8 +130,7 @@ const Login = () => {
 					/>
 					<Button type='submit'>Login</Button>
 					{error && <Error>{error}</Error>}
-					<Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-					<Link>CREATE A NEW ACCOUNT</Link>
+					<Link to='/Register'>CREATE A NEW ACCOUNT</Link>
 				</Form>
 			</Wrapper>
 		</Container>

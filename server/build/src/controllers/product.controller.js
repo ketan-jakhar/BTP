@@ -21,7 +21,9 @@ const utils_1 = require("../utils");
 // recent orders from here only
 const getAllProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { params } = req.body;
+        // const { params } = req.body;
+        req.body.params = JSON.parse(JSON.stringify({}));
+        const params = req.body.params;
         const productService = new services_1.ProductService();
         let products;
         if (params.searchType == enums_1.SearchType.COUNT)
@@ -143,6 +145,8 @@ const getCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const { user } = res.locals;
         if (!user)
             return next(new utils_1.AppError(401, 'Unauthorized'));
+        // const { params } = req.body;
+        req.body.params = JSON.parse(JSON.stringify({}));
         const { params } = req.body;
         const productService = new services_1.ProductService();
         const cart = yield productService.listResources(params);

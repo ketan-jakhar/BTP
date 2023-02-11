@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const controllers_1 = require("../controllers");
 const multer = require('multer');
 const router = express_1.default.Router();
 const fileFilter = (req, file, cb) => {
@@ -22,5 +23,5 @@ const upload = multer({
     storage,
     fileFilter,
 });
-router.put('/upload-image', upload.single('csvfile'));
+router.put('/upload-image', upload.single('imgfile'), controllers_1.uploadImageHandler);
 exports.default = router;

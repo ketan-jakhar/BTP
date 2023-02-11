@@ -17,6 +17,9 @@ const validateEnv = () => {
         AWS_ACCESS_KEY_ID: (0, envalid_1.str)(),
         AWS_SECRET_ACCESS_KEY: (0, envalid_1.str)(),
         AWS_REGION: (0, envalid_1.str)(),
+        AWS_BUCKET_NAME: (0, envalid_1.str)(),
+        SENDGRID_API_KEY: (0, envalid_1.str)(),
+        SENDGRID_SENDER: (0, envalid_1.str)(),
     });
 };
 exports.default = validateEnv;

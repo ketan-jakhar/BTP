@@ -24,7 +24,7 @@ class UserService extends _1.AbstractPaginationService {
 exports.UserService = UserService;
 const userRepository = utils_1.AppDataSource.getRepository(entities_1.User);
 const createUser = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Carpool input', input);
+    console.log('User input', input);
     return (yield utils_1.AppDataSource.manager.save(utils_1.AppDataSource.manager.create(entities_1.User, input)));
 });
 exports.createUser = createUser;

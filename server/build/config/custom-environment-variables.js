@@ -17,4 +17,6 @@ exports.default = {
     awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
     awsBucketName: 'AWS_BUCKET_NAME',
     awsRegion: 'AWS_REGION',
+    sendgridApiKey: 'SENDGRID_API_KEY',
+    sendgridSender: 'SENDGRID_SENDER',
 };

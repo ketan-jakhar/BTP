@@ -36,15 +36,12 @@ export const sliderItems = [
 	},
 ];
 
-export const BuySell = [
+export const Product = [
 	{
 		id: 1,
 		img: "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-		button: (
-			<NavLink style={{ color: "black" }} to='/shop'>
-				Buy and Sell
-			</NavLink>
-		),
+		button: "Buy and Sell Products",
+		to: "/shop",
 	},
 ];
 
@@ -52,11 +49,8 @@ export const CarPool = [
 	{
 		id: 1,
 		img: "https://media.istockphoto.com/id/1154420286/photo/man-entering-ride-sharing-car.jpg?s=612x612&w=0&k=20&c=I2kHUNC_Tc0YEtzBgXhN2es_I-4FmGRLaFaQUkDytSM=",
-		button: (
-			<NavLink style={{ color: "black" }} to='/carpool'>
-				Car Pooling
-			</NavLink>
-		),
+		button: "Carpool",
+		to: "/carpool",
 	},
 ];
 
@@ -64,11 +58,8 @@ export const Recycle = [
 	{
 		id: 1,
 		img: "https://www.nspackaging.com/wp-content/uploads/sites/4/2019/03/shutterstock_1492626947.jpg",
-		button: (
-			<NavLink style={{ color: "black" }} to='/recycle'>
-				Recycle
-			</NavLink>
-		),
+		button: "Recycle",
+		to: "/recycle",
 	},
 ];
 

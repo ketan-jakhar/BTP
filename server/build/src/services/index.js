@@ -16,8 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./generic-pagination.service"), exports);
 __exportStar(require("./user.service"), exports);
-__exportStar(require("./email.service"), exports);
 __exportStar(require("./carpool.service"), exports);
 __exportStar(require("./product.service"), exports);
 __exportStar(require("./recycle.service"), exports);
-// export * from './misc.service';
+__exportStar(require("./misc.service"), exports);

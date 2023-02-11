@@ -71,6 +71,8 @@ exports.updateProfile = updateProfile;
 // Get all users
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // const { params } = req.body;
+        req.body.params = JSON.parse(JSON.stringify({}));
         const { params } = req.body;
         const userService = new services_1.UserService();
         let users;

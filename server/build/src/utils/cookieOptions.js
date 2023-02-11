@@ -8,11 +8,8 @@ require('dotenv').config;
 const config_1 = __importDefault(require("config"));
 // Cookie Options
 exports.cookiesOptions = {
-    httpOnly: true,
     sameSite: 'lax',
 };
-if (process.env.NODE_ENV === 'production')
-    exports.cookiesOptions.secure = true;
 // Access Token Cookie Options
 exports.accessTokenCookieOptions = Object.assign(Object.assign({}, exports.cookiesOptions), { expires: new Date(Date.now() + config_1.default.get('accessTokenExpiresIn') * 60 * 1000), maxAge: config_1.default.get('accessTokenExpiresIn') * 60 * 1000 });
 // Refresh Token Cookie Options

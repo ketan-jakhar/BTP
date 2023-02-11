@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyTokenUrl = exports.requireUser = exports.deserializeUser = void 0;
+exports.verifyTokenUrl = exports.requireSuperAdmin = exports.requireAdmin = exports.requireUser = exports.deserializeUser = void 0;
 const services_1 = require("../services");
 const utils_1 = require("../utils");
+const enums_1 = require("../types/enums");
 const deserializeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let access_token;
@@ -67,6 +68,42 @@ const requireUser = (req, res, next) => {
     }
 };
 exports.requireUser = requireUser;
+const requireAdmin = (req, res, next) => {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(400, `Session has expired or user doesn't exist`));
+        if (user.role !== enums_1.UserRole.ADMIN)
+            return next(new utils_1.AppError(400, `You are not authorized to access this route`));
+        next();
+    }
+    catch (err) {
+        console.log('Error: (auth.controller -> requireUser)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+};
+exports.requireAdmin = requireAdmin;
+const requireSuperAdmin = (req, res, next) => {
+    try {
+        const { user } = res.locals;
+        if (!user)
+            return next(new utils_1.AppError(400, `Session has expired or user doesn't exist`));
+        if (user.role !== enums_1.UserRole.SUPER_ADMIN)
+            return next(new utils_1.AppError(400, `You are not authorized to access this route`));
+        next();
+    }
+    catch (err) {
+        console.log('Error: (auth.controller -> requireUser)', err);
+        if (err instanceof Error)
+            return next(new utils_1.AppError(res.statusCode, err.message));
+        else
+            return next(new utils_1.AppError(400, 'Something went Wrong'));
+    }
+};
+exports.requireSuperAdmin = requireSuperAdmin;
 const verifyTokenUrl = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Validate URL queries

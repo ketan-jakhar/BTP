@@ -118,7 +118,6 @@ export const loginHandler = async (
     res.cookie('refresh_token', refresh_token, refreshTokenCookieOptions);
     res.cookie('logged_in', true, {
       ...accessTokenCookieOptions,
-      httpOnly: false,
     });
 
     console.log('Res.cookie: (auth.controller -> login)', res.cookie);
@@ -131,6 +130,8 @@ export const loginHandler = async (
     res.status(200).json({
       status: 'success',
       access_token,
+      refresh_token,
+      logged_in: true,
       last_login_at: user.last_login_at,
     });
   } catch (err: any) {
@@ -214,7 +215,6 @@ export const refreshAccessTokenHandler = async (
     res.cookie('access_token', access_token, accessTokenCookieOptions);
     res.cookie('logged_in', true, {
       ...accessTokenCookieOptions,
-      httpOnly: false,
     });
 
     console.log('Res.cookie: (auth.controller -> refreshtoken)', res.cookie);

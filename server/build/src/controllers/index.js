@@ -19,3 +19,4 @@ __exportStar(require("./user.controller"), exports);
 __exportStar(require("./carpool.controller"), exports);
 __exportStar(require("./recycle.controller"), exports);
 __exportStar(require("./product.controller"), exports);
+__exportStar(require("./misc.controller"), exports);

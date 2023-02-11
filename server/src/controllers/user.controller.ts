@@ -76,7 +76,7 @@ export const getAllUsers = async (
     // const { params } = req.body;
 
     req.body.params = JSON.parse(JSON.stringify({}));
-    const params = req.body.params;
+    const { params } = req.body;
     const userService = new UserService();
     let users;
     if (params.searchType == SearchType.COUNT)

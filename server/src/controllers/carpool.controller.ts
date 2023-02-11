@@ -15,7 +15,7 @@ export const getAllCarpools = async (
 ) => {
   try {
     req.body.params = JSON.parse(JSON.stringify({}));
-    const params = req.body.params;
+    const { params } = req.body;
     const carpoolService = new CarpoolService();
     let carpools;
     if (params.searchType == SearchType.COUNT)

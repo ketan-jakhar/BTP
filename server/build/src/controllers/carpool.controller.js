@@ -17,6 +17,7 @@ const utils_1 = require("../utils");
 // Get all carpools
 const getAllCarpools = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        req.body.params = JSON.parse(JSON.stringify({}));
         const { params } = req.body;
         const carpoolService = new services_1.CarpoolService();
         let carpools;
@@ -180,7 +181,7 @@ const joinCarpool = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             }
             return false;
         };
-        if (carpool.user_id === null || carpool.user_id === undefined) {
+        if (!carpool.user_id) {
             if (carpool.rider_count < carpool.capacity)
                 carpool.rider_count++;
             else

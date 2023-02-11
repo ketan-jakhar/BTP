@@ -39,8 +39,7 @@ const Option = styled.option``;
 const Recent = () => {
 	return (
 		<Container>
-			<Navbar />
-			<Announcement />
+			<Navbar /> <hr />
 			<Title>Dresses</Title>
 			<FilterContainer>
 				<Filter>
@@ -77,8 +76,7 @@ const Recent = () => {
 				</Filter>
 			</FilterContainer>
 			<Products />
-			<Newsletter />
-			<Footer />
+			<hr /> <Footer />
 		</Container>
 	);
 };

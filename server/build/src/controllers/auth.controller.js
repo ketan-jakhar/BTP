@@ -12,31 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forgotPasswordHandler = exports.getForgotPasswordHandler = exports.refreshAccessTokenHandler = exports.logoutHandler = exports.loginHandler = exports.getLoginHandler = exports.registerHandler = exports.getRegisterHandler = void 0;
+exports.forgotPasswordHandler = exports.getForgotPasswordHandler = exports.refreshAccessTokenHandler = exports.logoutHandler = exports.loginHandler = exports.registerHandler = void 0;
 require('dotenv').config;
 const config_1 = __importDefault(require("config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const services_1 = require("../services");
 const utils_1 = require("../utils");
 const entities_1 = require("../types/entities");
-// GET /REGISTER
-const getRegisterHandler = (req, res, next) => {
-    try {
-        return res.status(200).json({
-            status: 'success',
-            data: null,
-            message: 'Page loaded successfully',
-        });
-    }
-    catch (err) {
-        console.log('Error: (auth.controller -> getRegister)', err);
-        if (err instanceof Error)
-            return next(new utils_1.AppError(res.statusCode, err.message));
-        else
-            return next(new utils_1.AppError(400, 'Something went Wrong'));
-    }
-};
-exports.getRegisterHandler = getRegisterHandler;
 // POST /REGISTER
 const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -81,24 +63,6 @@ const registerHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.registerHandler = registerHandler;
-// GET /LOGIN
-const getLoginHandler = (req, res, next) => {
-    try {
-        return res.status(200).json({
-            status: 'success',
-            data: null,
-            message: 'Page loaded successfully',
-        });
-    }
-    catch (err) {
-        console.log('Error: (auth.controller -> getLogin)', err);
-        if (err instanceof Error)
-            return next(new utils_1.AppError(res.statusCode, err.message));
-        else
-            return next(new utils_1.AppError(400, 'Something went Wrong'));
-    }
-};
-exports.getLoginHandler = getLoginHandler;
 // POST /LOGIN
 const loginHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -117,7 +81,7 @@ const loginHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         // 3. Add Cookies
         res.cookie('access_token', access_token, utils_1.accessTokenCookieOptions);
         res.cookie('refresh_token', refresh_token, utils_1.refreshTokenCookieOptions);
-        res.cookie('logged_in', true, Object.assign(Object.assign({}, utils_1.accessTokenCookieOptions), { httpOnly: false }));
+        res.cookie('logged_in', true, Object.assign({}, utils_1.accessTokenCookieOptions));
         console.log('Res.cookie: (auth.controller -> login)', res.cookie);
         // 4. Update last_login_at
         user.last_login_at = new Date();
@@ -126,6 +90,8 @@ const loginHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         res.status(200).json({
             status: 'success',
             access_token,
+            refresh_token,
+            logged_in: true,
             last_login_at: user.last_login_at,
         });
     }
@@ -188,7 +154,7 @@ const refreshAccessTokenHandler = (req, res, next) => __awaiter(void 0, void 0, 
         });
         // 5. Add Cookies
         res.cookie('access_token', access_token, utils_1.accessTokenCookieOptions);
-        res.cookie('logged_in', true, Object.assign(Object.assign({}, utils_1.accessTokenCookieOptions), { httpOnly: false }));
+        res.cookie('logged_in', true, Object.assign({}, utils_1.accessTokenCookieOptions));
         console.log('Res.cookie: (auth.controller -> refreshtoken)', res.cookie);
         // 6. Send response
         res.status(200).json({
@@ -236,12 +202,14 @@ const forgotPasswordHandler = (req, res, next) => __awaiter(void 0, void 0, void
         const url = `${req.protocol}://${req.hostname}:${config_1.default.get('port')}/api/auth/change-password/?tk=${token}`;
         console.log('url: (userController -> createUserHandler)', url);
         // Email Payload
-        const emailTo = '19ucc020@lnmiit.ac.in';
-        const message = `Hello ${!!user.name ? user.name : 'User'},\nPlease click on the link below to change your password.\n${url}\nRegards,\nTeam GoodFind`;
-        const subject = `Reset Password - GoodFind`;
-        const emailFrom = 'ketanjakhar29@gmail.com';
+        const email = {
+            to: user.email,
+            from: config_1.default.get('sendgridSender'),
+            subject: `Reset Password - GoodFind`,
+            message: `Hello ${!!user.name ? user.name : 'User'},\nPlease click on the link below to change your password.\n${url}\nRegards,\nTeam GoodFind`,
+        };
         // Send Email
-        (0, services_1.sendEmail)(emailTo, emailFrom, subject, message);
+        (0, services_1.sendEmail)(email.to, email.from, email.subject, email.message);
         return res.status(200).json({
             status: 'success',
             message: 'Email sent successfully',

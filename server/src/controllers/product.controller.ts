@@ -151,6 +151,8 @@ export const getCart = async (
     const { user } = res.locals;
     if (!user) return next(new AppError(401, 'Unauthorized'));
 
+    // const { params } = req.body;
+    req.body.params = JSON.parse(JSON.stringify({}));
     const { params } = req.body;
     const productService = new ProductService();
     const cart = await productService.listResources(params);

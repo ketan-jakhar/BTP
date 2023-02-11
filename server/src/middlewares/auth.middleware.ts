@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { findUserById } from '../services';
 import { verifyToken, verifyJwt, AppError } from '../utils';
+import { UserRole } from '../types/enums';
 
 export const deserializeUser = async (
   req: Request,
@@ -64,6 +65,56 @@ export const requireUser = (
       );
     }
     res.locals.user = user;
+    next();
+  } catch (err: any) {
+    console.log('Error: (auth.controller -> requireUser)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const requireAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user)
+      return next(
+        new AppError(400, `Session has expired or user doesn't exist`)
+      );
+
+    if (user.role !== UserRole.ADMIN)
+      return next(
+        new AppError(400, `You are not authorized to access this route`)
+      );
+    next();
+  } catch (err: any) {
+    console.log('Error: (auth.controller -> requireUser)', err);
+    if (err instanceof Error)
+      return next(new AppError(res.statusCode, err.message));
+    else return next(new AppError(400, 'Something went Wrong'));
+  }
+};
+
+export const requireSuperAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user } = res.locals;
+    if (!user)
+      return next(
+        new AppError(400, `Session has expired or user doesn't exist`)
+      );
+
+    if (user.role !== UserRole.SUPER_ADMIN)
+      return next(
+        new AppError(400, `You are not authorized to access this route`)
+      );
     next();
   } catch (err: any) {
     console.log('Error: (auth.controller -> requireUser)', err);

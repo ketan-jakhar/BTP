@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import BuySell from "./pages/BuySell";
+import Product from "./pages/Product";
 import Carpool from "./pages/CarPool";
 import Home from "./pages/Home";
 import Recycle from "./pages/Recycle";
@@ -10,8 +10,11 @@ import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Recent from "./pages/Recent";
 // import Checkout from "./pages/Checkout";
-import Product from "./pages/Product";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CreateProduct from "./pages/CreateProduct";
+import CreateRecycle from "./pages/CreateRecycle";
+import CreateCarpool from "./pages/CreateCarpool";
+import CarpoolList from "./pages/CarPool";
 
 const App = () => {
 	return (
@@ -20,9 +23,12 @@ const App = () => {
 				<Route path='/' element={<Home />} />
 				<Route path='/carpool' element={<Carpool />} />
 				<Route path='/recycle' element={<Recycle />} />
-				<Route path='/shop' element={<BuySell />} />
+				<Route path='/shop' element={<Product />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/login' element={<Login />} />
+				<Route path='/product/create' element={<CreateProduct />} />
+				<Route path='/recycle/create' element={<CreateRecycle />} />
+				<Route path='/carpool/create' element={<CreateCarpool />} />
 
 				<Route path='/cart' element={<Cart />} />
 				<Route path='/recent' element={<Recent />} />
